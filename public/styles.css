@@ -32,6 +32,7 @@ h1{
   padding:20px 20px;
   border-radius:50px;
   background-color:rgba(246, 229, 247, 0.85);
+  min-width: 367px;
 }
 .sakuma-konteineris{
   display: flex;
@@ -129,6 +130,7 @@ a.btn:active::before {
 .dropbtnreg:hover {
   background-color: #e9b2b0;
 }
+
 .form-group-login label {
   display: block;
     text-align: center;
