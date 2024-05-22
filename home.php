@@ -3,6 +3,7 @@ session_start();
 require("savienojums/connect_db.php");
 
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
+$Lietotajvards = $_SESSION['autorizejies'];
 
 $sql = "SELECT Bada_limenis, Labsajutas_limenis, Vards, Dzivnieks FROM dzivnieki WHERE ID_Lietotajs='$ID_Lietotajs'";
 $rezultats = mysqli_query($savienojums, $sql);
@@ -61,7 +62,8 @@ switch($dzivnieks) {
         <div class="konteiners">
             <img id="dzivBilde" src="<?php echo $dzivBilde; ?>" alt="Pet" class="dzivBilde">
             <div class="dzivInfo">
-                <div class="divAttrib">Vārds: <span id="petName"><?php echo htmlspecialchars($vards); ?></span></div>
+                <div class="divAttrib">Vārds: <span id="Vards"><?php echo htmlspecialchars($vards); ?></span></div>
+                <div class="divAttrib">Īpašnieka vārds: <span id="Lietotajvards"><?php echo htmlspecialchars($Lietotajvards); ?></span></div>
                 <div class="divAttrib">Bada līmenis: <span id="bada_limenis"><?php echo $bada_limenis; ?></span></div>
                 <div class="divAttrib">Labsajūtas līmenis: <span id="labsajutas_limenis"><?php echo $labsajutas_limenis; ?></span></div>
                 <div class="dropbtniziet"><a href='logout.php'>Iziet</a></div>
