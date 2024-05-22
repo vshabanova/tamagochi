@@ -41,6 +41,7 @@ switch($dzivnieks) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pabaro savu mājdzīvnieku</title>
     <link rel="stylesheet" type="text/css" href="public/spelesstyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="https://poetry4kids.com/wp-content/uploads/2021/09/I-Think-Id-Like-to-Get-a-Pet-icon-300x300.png">
 </head>
 <body>
@@ -48,7 +49,7 @@ switch($dzivnieks) {
         <div class="konteiners">
             <img id="dzivBilde" src="<?php echo $dzivBilde; ?>" alt="Pet" class="dzivBilde">
             <div class="dzivInfo">
-                <div class="divAttrib">Vārds: <span id="Vards"><?php echo htmlspecialchars($vards); ?></span></div>
+                <div class="divAttrib">Dzīvnieka vārds: <span id="Vards"><?php echo htmlspecialchars($vards); ?></span></div>
                 <div class="divAttrib">Īpašnieka vārds: <span id="Lietotajvards"><?php echo htmlspecialchars($Lietotajvards); ?></span></div>
                 <div class="divAttrib">Bada līmenis: <span id="bada_limenis"><?php echo $bada_limenis; ?></span></div>
                 <div class="divAttrib">Labsajūtas līmenis: <span id="labsajutas_limenis"><?php echo $labsajutas_limenis; ?></span></div>
@@ -56,9 +57,9 @@ switch($dzivnieks) {
             </div>
         </div>
         <div class="pogas">
-        <div class="dropbtniziet"><a href='veikals.php'>Veikals</a></div>
-        <div class="dropbtniziet"><a href='logout.php'>Ledusskapis</a></div>
-        <div class="dropbtniziet"><a href='logout.php'>Sasniegumi</a></div>
+            <div class="dropbtnizvelne"><a href='veikals.php'><i class='fa fa-store'></i>Veikals</a></div>
+            <div class="dropbtnizvelne"><a href='ledusskapis.php'><i class="fa-solid fa-bowl-food"></i>Ledusskapis</a></div>
+            <div class="dropbtnizvelne"><a href='sasniegumi.php'><i class="fa fa-star"></i>Sasniegumi</a></div>
         </div>
     </div>
     <script>

@@ -111,6 +111,9 @@ a.btn:active::before {
   display: block;
   text-decoration: none;
 }
+.dropbtniziet{
+  min-width: 130px;
+}
 .dropbtniziet a {
   font-family: "Rubik", sans-serif;
   background-color: #f9c4d2;
@@ -129,11 +132,42 @@ a.btn:active::before {
   display: block;
   text-decoration: none;
 }
-.dropbtniziet a:hover {
+.dropbtnizvelne{
+  margin: auto;
+  display: inline-block;
+}
+.dropbtnizvelne a i {
+  margin-right: 3px;
+}
+.dropbtnizvelne a{
+  font-family: "Rubik", sans-serif;
+  background-color: #f9c4d2;
+  font-weight: 600;
+  color: #382b22;
+  text-align: center;
+  border: 2px solid #cc7f9f;
+  border-radius: 0.75em;
+  transition: ease 0.15s;
+  transform-style: preserve-3d;
+  padding: 10px 15px;
+  margin:15px 2px 15px 0px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+.dropbtniziet a:hover, .dropbtnizvelne a:hover {
   background-color: #cc7f9f;
   color: #ffffff;
 }
 .konteiners {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+}
+.konteiners2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -160,9 +194,6 @@ a.btn:active::before {
   background-color: #f9f9f9;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
-.divAttrib2{
-  display: block;
-}
 .dzivInfo {
   margin-left: 20px;
   display: block;
@@ -175,11 +206,40 @@ a.btn:active::before {
   display: inline-block;
   margin-bottom: 5px;
 }
-.divAttrib .attribLabel {
-  font-weight: bold;
-  text-align: right;
+.pogas{
+  margin: auto;
+  width: 85%;
+    display: flex;
+    justify-content: center;
 }
-.divAttrib .attribValue {
-  text-align: right;
-  margin-left: 10px;
+.ledusskapis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ledusskapis-container h2 {
+  align-self: center;
+}
+.ledusskapis-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.ledusskapis-table th, .ledusskapis-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+.ledusskapis-table th {
+  background-color: #f2f2f2;
+}
+.ledusskapis-table tr:hover {
+  background-color: #f1f1f1;
+}
+.ledusskapis-back {
+  margin-top: 20px;
+  align-self: center;
+}
+.ledusskapis-table td{
+  text-align: center;
 }
