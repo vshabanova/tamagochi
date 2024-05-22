@@ -19,6 +19,7 @@ if(isset($_POST['Lietotajvards'], $_POST['Parole'], $_POST['autorizeties'])) {
     $lietotajs = $rezultats->fetch_assoc();
 
     if ($lietotajs && password_verify($parole, $lietotajs['Parole'])) {
+        $_SESSION['Lietotajs_ID'] = $lietotajs['Lietotajs_ID'];
         $_SESSION['autorizejies'] = $lietotajs['Lietotajvards'];
         header('Location: home.php');
         exit();
