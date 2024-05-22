@@ -9,5 +9,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $labsajutas_limenis = $_POST['labsajutasLimenis'];
 
     $sql = "UPDATE dzivnieki SET Bada_limenis='$bada_limenis', Labsajutas_limenis='$labsajutas_limenis' WHERE ID_Lietotajs='$ID_Lietotajs'";
+    
+    if (mysqli_query($savienojums, $sql)) {
+        echo "Record updated successfully";
+    } else {
+        echo "Error updating record: " . mysqli_error($savienojums);
+    }
 }
 ?>

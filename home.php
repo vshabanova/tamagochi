@@ -6,14 +6,17 @@ $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $Lietotajvards = $_SESSION['autorizejies'];
 
 $sql = "SELECT Bada_limenis, Labsajutas_limenis, Vards, Dzivnieks FROM dzivnieki WHERE ID_Lietotajs='$ID_Lietotajs'";
-$rezultats = mysqli_query($savienojums, $sql);
-$dzivDati = mysqli_fetch_assoc($rezultats);
+$result = mysqli_query($savienojums, $sql);
 
-$bada_limenis = $dzivDati['Bada_limenis'];
-$labsajutas_limenis = $dzivDati['Labsajutas_limenis'];
-$vards = $dzivDati['Vards'];
-$dzivnieks = $dzivDati['Dzivnieks'];
-
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $bada_limenis = $row['Bada_limenis'];
+    $labsajutas_limenis = $row['Labsajutas_limenis'];
+    $vards = $row['Vards'];
+    $dzivnieks = $row['Dzivnieks'];
+} else {
+    echo "Error: " . mysqli_error($savienojums);
+}
 $dzivBilde = '';
 switch($dzivnieks) {
     case "Suns":
@@ -26,7 +29,8 @@ switch($dzivnieks) {
         $dzivBilde = "public/zakis.png";
         break;
     default:
-    break;
+        $dzivBilde = "public/default.png";
+        break;
 }
 ?>
 
@@ -38,24 +42,6 @@ switch($dzivnieks) {
     <title>Pabaro savu mājdzīvnieku</title>
     <link rel="stylesheet" type="text/css" href="public/spelesstyles.css">
     <link rel="icon" type="image/x-icon" href="https://poetry4kids.com/wp-content/uploads/2021/09/I-Think-Id-Like-to-Get-a-Pet-icon-300x300.png">
-    <style>
-        .konteiners {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 20px;
-        }
-        .dzivBilde {
-            max-width: 200px;
-            height: auto;
-        }
-        .dzivInfo {
-            margin-left: 20px;
-        }
-        .divAttrib {
-            margin-bottom: 10px;
-        }
-    </style>
 </head>
 <body>
     <div class="speles-container">
@@ -69,46 +55,43 @@ switch($dzivnieks) {
                 <div class="dropbtniziet"><a href='logout.php'>Iziet</a></div>
             </div>
         </div>
+        <div class="pogas">
+        <div class="dropbtniziet"><a href='veikals.php'>Veikals</a></div>
+        <div class="dropbtniziet"><a href='logout.php'>Ledusskapis</a></div>
+        <div class="dropbtniziet"><a href='logout.php'>Sasniegumi</a></div>
+        </div>
     </div>
     <script>
 document.addEventListener("DOMContentLoaded", function() {
-    let badaLimenis = parseInt(localStorage.getItem("badaLimenis"));
-    if (isNaN(badaLimenis)) {
-        badaLimenis = <?php echo $bada_limenis; ?>;
+    let badaLimenis = <?php echo $bada_limenis; ?>;
+    let labsajutasLimenis = <?php echo $labsajutas_limenis; ?>;
+
+    function atjaunotDzivDatus() {
+        badaLimenis = Math.max(0, badaLimenis - 1);
+        labsajutasLimenis = Math.max(0, labsajutasLimenis - 1);
+
+        document.getElementById("bada_limenis").innerText = badaLimenis;
+        document.getElementById("labsajutas_limenis").innerText = labsajutasLimenis;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "atjaunot_dziv_datus.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log("Dati atjaunoti");
+                } else {
+                    console.error("Kluda: " + xhr.statusText);
+                }
+            }
+        };
+        xhr.send("badaLimenis=" + badaLimenis + "&labsajutasLimenis=" + labsajutasLimenis);
     }
-    
-    let labsLimenis = parseInt(localStorage.getItem("labsLimenis"));
-    if (isNaN(labsLimenis)) {
-        labsLimenis = <?php echo $labsajutas_limenis; ?>;
-    }
 
-    document.getElementById("bada_limenis").innerText = badaLimenis;
-    document.getElementById("labsajutas_limenis").innerText = labsLimenis;
+    atjaunotDzivDatus();
 
-    atjaunotDzivDatus(badaLimenis, labsLimenis);
-
-    setInterval(function() {
-        badaLimenis = parseInt(document.getElementById("bada_limenis").innerText);
-        labsLimenis = parseInt(document.getElementById("labsajutas_limenis").innerText);
-        
-        atjaunotDzivDatus(badaLimenis, labsLimenis);
-    }, 30000);
+    setInterval(atjaunotDzivDatus, 30000);
 });
-
-function atjaunotDzivDatus(badaLimenis, labsLimenis) {
-    badaLimenis = Math.max(0, badaLimenis - 1);
-    labsLimenis = Math.max(0, labsLimenis - 1);
-    
-    document.getElementById("bada_limenis").innerText = badaLimenis;
-    document.getElementById("labsajutas_limenis").innerText = labsLimenis;
-
-    localStorage.setItem("badaLimenis", badaLimenis);
-    localStorage.setItem("labsLimenis", labsLimenis);
-    
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "atjaunot_dziv_datus.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send("badaLimenis=" + badaLimenis + "&labsajutasLimenis=" + labsLimenis);
-}</script>
+</script>
 </body>
 </html>
