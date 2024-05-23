@@ -243,3 +243,25 @@ a.btn:active::before {
 .ledusskapis-table td{
   text-align: center;
 }
+.nauda {
+  position: relative;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.naudasAttrib {
+  display: inline-block;
+  border: 1px solid #999;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+.naudasBilde {
+  width: 25px;
+  height: 20px;
+  margin-right: 5px;
+}

@@ -5,19 +5,31 @@ require("savienojums/connect_db.php");
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $Lietotajvards = $_SESSION['autorizejies'];
 
-$sql = "SELECT Bada_limenis, Labsajutas_limenis, Vards, Dzivnieks FROM dzivnieki WHERE ID_Lietotajs='$ID_Lietotajs'";
-$result = mysqli_query($savienojums, $sql);
+$sql_dzivnieks = "SELECT Bada_limenis, Labsajutas_limenis, Vards, Dzivnieks FROM dzivnieki WHERE ID_Lietotajs='$ID_Lietotajs'";
+$result_dzivnieks = mysqli_query($savienojums, $sql_dzivnieks);
 
-if ($result && mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $bada_limenis = $row['Bada_limenis'];
-    $labsajutas_limenis = $row['Labsajutas_limenis'];
-    $vards = $row['Vards'];
-    $dzivnieks = $row['Dzivnieks'];
+if ($result_dzivnieks && mysqli_num_rows($result_dzivnieks) > 0) {
+    $row_dzivnieks = mysqli_fetch_assoc($result_dzivnieks);
+    $bada_limenis = $row_dzivnieks['Bada_limenis'];
+    $labsajutas_limenis = $row_dzivnieks['Labsajutas_limenis'];
+    $vards = $row_dzivnieks['Vards'];
+    $dzivnieks = $row_dzivnieks['Dzivnieks'];
 } else {
     echo "Error: " . mysqli_error($savienojums);
 }
+
+$sql_nauda = "SELECT Nauda FROM lietotaji WHERE Lietotajs_ID='$ID_Lietotajs'";
+$result_nauda = mysqli_query($savienojums, $sql_nauda);
+
+if ($result_nauda && mysqli_num_rows($result_nauda) > 0) {
+    $row_nauda = mysqli_fetch_assoc($result_nauda);
+    $nauda = $row_nauda['Nauda'];
+} else {
+    echo "Error: " . mysqli_error($savienojums);
+}
+
 $dzivBilde = '';
+$naudasBilde = 'public/kapeika.png';
 switch($dzivnieks) {
     case "Suns":
         $dzivBilde = "public/suns.png";
@@ -46,6 +58,9 @@ switch($dzivnieks) {
 </head>
 <body>
     <div class="speles-container">
+    <div class="nauda">
+    <div class="naudasAttrib"><img id="naudasBilde" src="<?php echo $naudasBilde; ?>" alt="Nauda" class="naudasBilde"> <span id="nauda"><?php echo $nauda; ?></span></div>
+    </div>
         <div class="konteiners">
             <img id="dzivBilde" src="<?php echo $dzivBilde; ?>" alt="Pet" class="dzivBilde">
             <div class="dzivInfo">
@@ -66,13 +81,16 @@ switch($dzivnieks) {
 document.addEventListener("DOMContentLoaded", function() {
     let badaLimenis = <?php echo $bada_limenis; ?>;
     let labsajutasLimenis = <?php echo $labsajutas_limenis; ?>;
+    let nauda = <?php echo $nauda; ?>;
 
     function atjaunotDzivDatus() {
         badaLimenis = Math.max(0, badaLimenis - 1);
         labsajutasLimenis = Math.max(0, labsajutasLimenis - 1);
+        nauda += 5;
 
         document.getElementById("bada_limenis").innerText = badaLimenis;
         document.getElementById("labsajutas_limenis").innerText = labsajutasLimenis;
+        document.getElementById("nauda").innerText = nauda;
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "atjaunot_dziv_datus.php", true);
@@ -86,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         };
-        xhr.send("badaLimenis=" + badaLimenis + "&labsajutasLimenis=" + labsajutasLimenis);
+        xhr.send("badaLimenis=" + badaLimenis + "&labsajutasLimenis=" + labsajutasLimenis + "&nauda=" + nauda);
     }
 
     atjaunotDzivDatus();
