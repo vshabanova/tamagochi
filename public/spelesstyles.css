@@ -265,3 +265,91 @@ a.btn:active::before {
   height: 20px;
   margin-right: 5px;
 }
+.veikals-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.veikals-nauda h2 {
+  display: inline-block;
+  margin-left: 5px;
+}
+.naudas {
+  position: relative;
+  top: 10px;
+  right: 10px;
+  display: inline-block;
+  float: right;
+}
+.veikals-nauda {
+  display: inline-block;
+}
+.veikals-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.veikals-table th, .veikals-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+.veikals-table th {
+  background-color: #f2f2f2;
+}
+.veikals-table tr:hover {
+  background-color: #f1f1f1;
+}
+.veikals-back {
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+}
+.veikals-table td {
+  text-align: center;
+}
+.nauda {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  width: 100%;
+}
+.naudasAttrib {
+  display: flex;
+  align-items: center;
+  border: 1px solid #999;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+input[type="number"] {
+  font-family: "Rubik", sans-serif;
+  width: 60px;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+.dropbtnpirkt {
+  font-family: "Rubik", sans-serif;
+  background-color: #f9c4d2;
+  font-weight: 600;
+  color: #382b22;
+  border: 2px solid #cc7f9f;
+  border-radius: 0.75em;
+  transition: ease 0.15s;
+  transform-style: preserve-3d;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+.dropbtnpirkt:hover{
+  background-color: #cc7f9f;
+  color: #ffffff;
+}

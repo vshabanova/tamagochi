@@ -51,9 +51,9 @@ if ($result && mysqli_num_rows($result) > 0) {
                 </tr>
                 <?php endforeach; ?>
             </table>
-            <div class="dropbtniziet"><a href='home.php'>Atpakaļ</a></div>
         </div>
     </div>
+    <a href="home.php" class="btn">Atpakaļ</a>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const buttons = document.querySelectorAll('.dropbtn');
