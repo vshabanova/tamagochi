@@ -19,8 +19,6 @@ if ($ediens_result && mysqli_num_rows($ediens_result) > 0) {
     while ($row = mysqli_fetch_assoc($ediens_result)) {
         $edieni[] = $row;
     }
-} else {
-    echo "Error: " . mysqli_error($savienojums);
 }
 $naudasBilde = 'public/kapeika.png';
 ?>
@@ -91,6 +89,9 @@ $naudasBilde = 'public/kapeika.png';
                     <button type="submit" class="dropbtnpirkt">Pirkt</button>
                 </div>
             </form>
+            <div class="transakcijas-button">
+                <a href="transakcijas.php" class="btn">Apskatīt Darījumu Vēsturi</a>
+            </div>
         </div>
     </div>
     <a href="home.php" class="btn">Atpakaļ</a>

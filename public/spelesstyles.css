@@ -353,3 +353,50 @@ input[type="number"] {
   background-color: #cc7f9f;
   color: #ffffff;
 }
+.transakcijas-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.transakcijas-button .btn {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.transakcijas-button .btn:hover{
+  background-color:#469e49
+}
+.transakcijas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.transakcijas-table th, .transakcijas-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.transakcijas-table th {
+  background-color: #f2f2f2;
+  color: black;
+}
+
+.transakcijas-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.transakcijas-table tr:hover {
+  background-color: #ddd;
+}
+.transakcijash2{
+  text-align: center;
+}

@@ -49,6 +49,10 @@ foreach ($_POST['daudzums'] as $edien_id => $daudzums) {
                 $pievienot_edienu_sql = "INSERT INTO ledusskapis (Lietotajs_ID, Ediens_ID, Daudzums) VALUES ('$ID_Lietotajs', '$edien_id', '$quantity')";
                 mysqli_query($savienojums, $pievienot_edienu_sql);
             }
+            // ieraksta transakciju
+            $tagadejais_laiks = date('Y-m-d H:i:s');
+            $transakcija_sql = "INSERT INTO transakcijas (Lietotajs_ID, Ediens_ID, Daudzums, Nauda, Datums_laiks) VALUES ('$ID_Lietotajs', '$edien_id', '$daudzums', '{$ediena_cena[$edien_id]}', '$tagadejais_laiks')";
+            mysqli_query($savienojums, $transakcija_sql);
         }
     } else {
         echo "Kļūda atjauninot naudu: " . mysqli_error($savienojums);
