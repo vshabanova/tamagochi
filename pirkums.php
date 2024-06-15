@@ -46,7 +46,7 @@ foreach ($_POST['daudzums'] as $edien_id => $daudzums) {
                 mysqli_query($savienojums, $atjaunot_edienu_sql);
             } else {
                 // pievieno edienu
-                $pievienot_edienu_sql = "INSERT INTO ledusskapis (Lietotajs_ID, Ediens_ID, Daudzums) VALUES ('$ID_Lietotajs', '$edien_id', '$quantity')";
+                $pievienot_edienu_sql = "INSERT INTO ledusskapis (Lietotajs_ID, Ediens_ID, Daudzums) VALUES ('$ID_Lietotajs', '$edien_id', '$daudzums')";
                 mysqli_query($savienojums, $pievienot_edienu_sql);
             }
             // ieraksta transakciju

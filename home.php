@@ -1,6 +1,7 @@
 <?php 
 session_start();
 require("savienojums/connect_db.php");
+require("sasniegumi.php");
 
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $Lietotajvards = $_SESSION['autorizejies'];
@@ -44,6 +45,14 @@ switch($dzivnieks) {
         $dzivBilde = "public/default.png";
         break;
 }
+
+
+apbalvotLietotaju($savienojums, $ID_Lietotajs, 'spele_sakta');
+
+if ($labsajutas_limenis <= 70) {
+    apbalvotLietotaju($savienojums, $ID_Lietotajs, 'labsajuta_krities', ['Labsajutas_limenis' => $labsajutas_limenis]);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +83,7 @@ switch($dzivnieks) {
         <div class="pogas">
             <div class="dropbtnizvelne"><a href='veikals.php'><i class='fa fa-store'></i>Veikals</a></div>
             <div class="dropbtnizvelne"><a href='ledusskapis.php'><i class="fa-solid fa-bowl-food"></i>Ledusskapis</a></div>
-            <div class="dropbtnizvelne"><a href='sasniegumi.php'><i class="fa fa-star"></i>Sasniegumi</a></div>
+            <div class="dropbtnizvelne"><a href='sasniegumiapskatit.php'><i class="fa fa-star"></i>Sasniegumi</a></div>
         </div>
     </div>
     <script>

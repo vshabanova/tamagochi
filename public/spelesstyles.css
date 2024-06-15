@@ -33,6 +33,7 @@ h1{
   border-radius:50px;
   background-color:rgba(246, 229, 247, 0.85);
   min-width: 367px;
+  margin: 5px;
 }
 .sakuma-konteineris{
   display: flex;
@@ -399,4 +400,11 @@ input[type="number"] {
 }
 .transakcijash2{
   text-align: center;
+}
+
+.speles-container-sasniegumi{
+  padding:20px 20px;
+  border-radius:50px;
+  background-color:rgba(246, 229, 247, 0.85);
+  min-width: 367px;
 }

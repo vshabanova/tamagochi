@@ -11,10 +11,10 @@ $sql = "SELECT l.Ledusskapja_ID, l.Ediens_ID, l.Daudzums, Nosaukums, Vertiba
         WHERE l.Lietotajs_ID='$ID_Lietotajs'";
 $result = mysqli_query($savienojums, $sql);
 
-$foodItems = [];
+$Edieni = [];
 if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-        $foodItems[] = $row;
+        $Edieni[] = $row;
     }
 } else {
     echo "Error: " . mysqli_error($savienojums);
@@ -42,71 +42,67 @@ if ($result && mysqli_num_rows($result) > 0) {
                     <th>Vērtiba</th>
                     <th>Darbība</th>
                 </tr>
-                <?php foreach ($foodItems as $item): ?>
+                <?php foreach ($Edieni as $Ediens): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($item['Nosaukums']); ?></td>
-                    <td><?php echo htmlspecialchars($item['Daudzums']); ?></td>
-                    <td><?php echo htmlspecialchars($item['Vertiba']); ?></td>
-                    <td><button class="dropbtn" data-ediena-id="<?php echo $item['Ediens_ID']; ?>">Barot</button></td>
+                    <td><?php echo htmlspecialchars($Ediens['Nosaukums']); ?></td>
+                    <td id="daudzums-<?php echo $Ediens['Ediens_ID']; ?>"><?php echo htmlspecialchars($Ediens['Daudzums']); ?></td>
+                    <td><?php echo htmlspecialchars($Ediens['Vertiba']); ?></td>
+                    <td><button class="dropbtn" data-ediena-id="<?php echo $Ediens['Ediens_ID']; ?>">Barot</button></td>
                 </tr>
                 <?php endforeach; ?>
             </table>
         </div>
     </div>
     <a href="home.php" class="btn">Atpakaļ</a>
+    
+    <div id="pazinojums" style="display: none; position: fixed; top: 10px; right: 10px; background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+    </div>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const buttons = document.querySelectorAll('.dropbtn');
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const edienaId = this.getAttribute('data-ediena-id');
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', 'barotdziv.php', true);
-                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === XMLHttpRequest.DONE) {
-                            if (xhr.status === 200) {
-                                switch(xhr.responseText) {
-                                    case "success":
-                                        alert('Dzīvnieks ir pabarots!');
-                                        location.reload();
-                                        break;
-                                    case "piesledzies":
-                                        alert('Lūdzu, piesakieties sistēmā.');
-                                        break;
-                                    case "nav_dziv":
-                                        alert('Dzīvnieks netika atrasts.');
-                                        break;
-                                    case "nav_ediens":
-                                        alert('Ēdiens ir beidzies.');
-                                        break;
-                                    case "nav_ediens_atrasts":
-                                        alert('Ēdiens netika atrasts.');
-                                        break;
-                                    case "daudzums_error":
-                                        alert('Kļūda atjauninot ēdiena daudzumu.');
-                                        break;
-                                    case "dzivnieks_error":
-                                        alert('Kļūda atjauninot dzīvnieka statusu.');
-                                        break;
-                                    case "kluda":
-                                        alert('Nepareizi dati.');
-                                        break;
-                                    case "requests_neiet":
-                                        alert('Nepareizs pieprasījuma veids.');
-                                        break;
-                                    default:
-                                        alert('Kļūda barojot dzīvnieku.');
-                                }
-                            } else {
-                                alert('Kļūda savienojoties ar serveri.');
+document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll('.dropbtn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const edienaId = this.getAttribute('data-ediena-id');
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'barotdziv.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const response = xhr.responseText;
+                        document.getElementById('pazinojums').innerHTML = response;
+                        
+                        if (response.includes('success-message')) {
+                            const newDaudzums = response.match(/Jaunais daudzums: (\d+)/);
+                            if (newDaudzums && newDaudzums.length > 1) {
+                                const atjaunotsDaudzums = newDaudzums[1];
+                                document.getElementById(`daudzums-${edienaId}`).innerText = atjaunotsDaudzums;
                             }
                         }
-                    };
-                    xhr.send('ediena_id=' + edienaId);
-                });
-            });
+                        
+                        document.getElementById('pazinojums').style.display = 'block';
+                        setTimeout(() => {
+                            document.getElementById('pazinojums').style.display = 'none';
+                        }, 3000);
+                    } else {
+                        raditPazinojumu('Kļūda savienojoties ar serveri.');
+                    }
+                }
+            };
+            xhr.send('ediena_id=' + edienaId);
         });
-    </script>
+    });
+});
+
+function raditPazinojumu(message) {
+    const pazinojums = document.getElementById('pazinojums');
+    pazinojums.innerText = message;
+    pazinojums.style.display = 'block';
+    setTimeout(() => {
+        pazinojums.style.display = 'none';
+    }, 3000);
+}
+</script>
 </body>
 </html>
