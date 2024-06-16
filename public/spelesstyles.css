@@ -134,7 +134,7 @@ a.btn:active::before {
   text-decoration: none;
 }
 .dropbtnizvelne{
-  margin: auto;
+  margin-left: 12px;
   display: inline-block;
 }
 .dropbtnizvelne a i {
@@ -407,4 +407,19 @@ input[type="number"] {
   border-radius:50px;
   background-color:rgba(246, 229, 247, 0.85);
   min-width: 367px;
+}
+
+.viktorina-atbilde{
+  font-family: "Rubik", sans-serif;
+    width: 200px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+.viktorina-centrs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

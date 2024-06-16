@@ -1,6 +1,6 @@
 <?php 
 session_start();
-require("savienojums/connect_db.php");
+require("../savienojums/connect_db.php");
 
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $Lietotajvards = $_SESSION['autorizejies'];
@@ -71,7 +71,7 @@ if ($kopeja_cena > $tagadeja_nauda) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pirkuma apstiprinājums</title>
-    <link rel="stylesheet" type="text/css" href="public/spelesstyles.css">
+    <link rel="stylesheet" type="text/css" href="../public/spelesstyles.css">
 </head>
 <body>
     <div class="speles-container">

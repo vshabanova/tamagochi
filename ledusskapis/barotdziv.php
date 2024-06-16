@@ -1,7 +1,7 @@
 <?php
 session_start();
-require("savienojums/connect_db.php");
-require("sasniegumi.php");
+require("../savienojums/connect_db.php");
+require("../sasniegumi/sasniegumi.php");
 
 if (!isset($_SESSION['Lietotajs_ID'])) {
     echo "Please log in";

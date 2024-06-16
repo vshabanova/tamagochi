@@ -1,7 +1,7 @@
 <?php 
 session_start();
 require("savienojums/connect_db.php");
-require("sasniegumi.php");
+require("sasniegumi/sasniegumi.php");
 
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $Lietotajvards = $_SESSION['autorizejies'];
@@ -81,9 +81,10 @@ if ($labsajutas_limenis <= 70) {
             </div>
         </div>
         <div class="pogas">
-            <div class="dropbtnizvelne"><a href='veikals.php'><i class='fa fa-store'></i>Veikals</a></div>
-            <div class="dropbtnizvelne"><a href='ledusskapis.php'><i class="fa-solid fa-bowl-food"></i>Ledusskapis</a></div>
-            <div class="dropbtnizvelne"><a href='sasniegumiapskatit.php'><i class="fa fa-star"></i>Sasniegumi</a></div>
+            <div class="dropbtnizvelne"><a href='veikals/veikals.php'><i class='fa fa-store'></i>Veikals</a></div>
+            <div class="dropbtnizvelne"><a href='ledusskapis/ledusskapis.php'><i class="fa-solid fa-bowl-food"></i>Ledusskapis</a></div>
+            <div class="dropbtnizvelne"><a href='sasniegumi/sasniegumiapskatit.php'><i class="fa fa-star"></i>Sasniegumi</a></div>
+            <div class="dropbtnizvelne"><a href='viktorina/viktorina.php'><i class="fa fa-question"></i>Viktorīna</a></div>
         </div>
     </div>
     <script>
