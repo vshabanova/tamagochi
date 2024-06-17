@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2024 at 03:06 PM
+-- Generation Time: Jun 17, 2024 at 07:03 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -155,7 +155,10 @@ CREATE TABLE `lietotaji` (
   `Lietotajvards` varchar(255) NOT NULL,
   `Epasts` varchar(255) NOT NULL,
   `Parole` varchar(255) NOT NULL,
-  `Nauda` int(11) NOT NULL
+  `Nauda` int(11) NOT NULL,
+  `Viktorina_pabeigta` tinyint(1) DEFAULT 0,
+  `Viktorina_Pareizas_Atbildes` int(11) NOT NULL,
+  `Viktorina_Kopskaits` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -301,7 +304,7 @@ ALTER TABLE `atbildes`
 -- AUTO_INCREMENT for table `dzivnieki`
 --
 ALTER TABLE `dzivnieki`
-  MODIFY `Dzivnieks_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `Dzivnieks_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `ediens`
@@ -325,19 +328,19 @@ ALTER TABLE `kapi`
 -- AUTO_INCREMENT for table `ledusskapis`
 --
 ALTER TABLE `ledusskapis`
-  MODIFY `Ledusskapja_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `Ledusskapja_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `lietotaji`
 --
 ALTER TABLE `lietotaji`
-  MODIFY `Lietotajs_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `Lietotajs_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `sasniegumi`
 --
 ALTER TABLE `sasniegumi`
-  MODIFY `Sasniegumi_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `Sasniegumi_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT for table `sasniegumu_banka`
@@ -349,7 +352,7 @@ ALTER TABLE `sasniegumu_banka`
 -- AUTO_INCREMENT for table `transakcijas`
 --
 ALTER TABLE `transakcijas`
-  MODIFY `Transakcijas_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `Transakcijas_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- Constraints for dumped tables
