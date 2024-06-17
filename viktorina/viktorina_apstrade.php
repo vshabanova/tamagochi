@@ -33,10 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $_SESSION['viktorina_pabeigta'] = true;
 
+    $sql = "UPDATE lietotaji SET Viktorina_Pareizas_Atbildes = $pareizas_atbildes, Viktorina_Kopskaits = $kopskaits, Viktorina_Pabeigta = 1 WHERE Lietotajs_ID = '$ID_Lietotajs'";
+    mysqli_query($savienojums, $sql);
+
+    if ($pareizas_atbildes === $kopskaits) {
+        apbalvotLietotaju($savienojums, $ID_Lietotajs, 'viktorina_izpildita');
+    }
+
     $nauda_par_atbildi = 15;
     $kop_nauda = $pareizas_atbildes * $nauda_par_atbildi;
+
     $sql = "UPDATE lietotaji SET Nauda = Nauda + $kop_nauda WHERE Lietotajs_ID = '$ID_Lietotajs'";
     mysqli_query($savienojums, $sql);
+
+    $_SESSION['pareizas_atbildes'] = $pareizas_atbildes;
+    $_SESSION['kopskaits'] = $kopskaits;
 
     header('Location: viktorina_rezultati.php');
     exit;

@@ -1,14 +1,28 @@
-<?php 
+<?php
 session_start();
 require("../savienojums/connect_db.php");
 
-if (!isset($_SESSION['viktorina_pabeigta']) || !$_SESSION['viktorina_pabeigta']) {
-    header('Location: viktorina.php');
+if (!isset($_SESSION['Lietotajs_ID'])) {
+    header('Location: login.php');
     exit;
 }
 
-$pareizas_atbildes = $_SESSION['pareizas_atbildes'];
-$kopskaits = $_SESSION['kopskaits'];
+$ID_Lietotajs = $_SESSION['Lietotajs_ID'];
+
+$sql = "SELECT Viktorina_Pareizas_Atbildes, Viktorina_Kopskaits FROM lietotaji WHERE Lietotajs_ID='$ID_Lietotajs'";
+$result = mysqli_query($savienojums, $sql);
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $pareizas_atbildes = $row['Viktorina_Pareizas_Atbildes'];
+    $kopskaits = $row['Viktorina_Kopskaits'];
+} else {
+    echo "Error: " . mysqli_error($savienojums);
+    exit;
+}
+
+$nauda_par_atbildi = 15;
+$kop_nauda = $pareizas_atbildes * $nauda_par_atbildi;
+
 ?>
 
 <!DOCTYPE html>

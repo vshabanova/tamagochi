@@ -39,7 +39,7 @@ function apbalvotLietotaju($savienojums, $ID_Lietotajs, $notikums, $notikumaDati
                     }
                     break;
                 case 2:
-                    if ($notikums === 'dziv_gulejis_1' && isset($notikumaDati['Reizes_gulets']) && $notikumaDati['Reizes_gulets'] == 1) {
+                    if ($notikums === 'dziv_gulejis' && isset($notikumaDati['Reizes_gulets']) && $notikumaDati['Reizes_gulets'] == 1) {
                         $balva = true;
                     }
                     break;
@@ -49,7 +49,7 @@ function apbalvotLietotaju($savienojums, $ID_Lietotajs, $notikums, $notikumaDati
                     }
                     break;
                 case 4:
-                    if ($notikums === 'dziv_gulejis_5' && isset($notikumaDati['Reizes_gulets']) && $notikumaDati['Reizes_gulets'] == 5) {
+                    if ($notikums === 'dziv_gulejis' && isset($notikumaDati['Reizes_gulets']) && $notikumaDati['Reizes_gulets'] == 5) {
                         $balva = true;
                     }
                     break;
@@ -85,13 +85,12 @@ function apbalvotLietotaju($savienojums, $ID_Lietotajs, $notikums, $notikumaDati
                     if ($result) {
                         echo "<div class='speles-container'>
                                     <p>Izpildīts sasniegums: " . htmlspecialchars($sasniegums['Nosaukums']) . " - Balva: " . htmlspecialchars($vertiba) . " monētas!</p>
-                                    <button class='dropbtn' onclick='aizvertPazinojumu()'>Aizvērt</button>
                               </div>";
                     } else {
-                        echo "Kļūda pievienojot sasniegumu: " . mysqli_error($savienojums);
+                            echo "Kļūda pievienojot sasniegumu: " . mysqli_error($savienojums);
                     }
                 } else {
-                    echo "Kļūda atjauninot naudu: " . mysqli_error($savienojums);
+                        echo "Kļūda atjauninot naudu: " . mysqli_error($savienojums);
                 }
             }
         }
@@ -110,11 +109,3 @@ function irPirmoReiziApejus($savienojums, $ID_Lietotajs, $ediens) {
     return $row['skaits'] == 1;
 }
 ?>
-<script>
-function aizvertPazinojumu() {
-    const pazinojums = document.querySelector('.speles-container');
-    if (pazinojums) {
-        pazinojums.style.display = 'none';
-    }
-}
-</script>

@@ -1,23 +1,35 @@
-<?php 
+<?php
 session_start();
+require("../savienojums/connect_db.php");
 
-if (isset($_SESSION['viktorina_pabeigta']) && $_SESSION['viktorina_pabeigta']) {
-    header('Location: viktorina_rezultati.php');
+if (!isset($_SESSION['Lietotajs_ID'])) {
+    header('Location: login.php');
     exit;
 }
 
-require("../savienojums/connect_db.php");
-
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
-$Lietotajvards = $_SESSION['autorizejies'];
 
-$jautajumi_sql = "SELECT * FROM jautajumu_banka";
-$jautajumi_result = mysqli_query($savienojums, $jautajumi_sql);
-$jautajumi = [];
-if ($jautajumi_result && mysqli_num_rows($jautajumi_result) > 0) {
-    while ($row = mysqli_fetch_assoc($jautajumi_result)) {
-        $jautajumi[] = $row;
+$sql = "SELECT Viktorina_pabeigta FROM lietotaji WHERE Lietotajs_ID='$ID_Lietotajs'";
+$result = mysqli_query($savienojums, $sql);
+
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $viktorina_pabeigta = $row['Viktorina_pabeigta'];
+
+    if ($viktorina_pabeigta == 1) {
+        header('Location: viktorina_rezultati.php');
+        exit;
     }
+} else {
+    echo "Error: " . mysqli_error($savienojums);
+    exit;
+}
+
+$sql = "SELECT * FROM jautajumu_banka";
+$result = mysqli_query($savienojums, $sql);
+$jautajumi = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $jautajumi[] = $row;
 }
 ?>
 
@@ -47,5 +59,6 @@ if ($jautajumi_result && mysqli_num_rows($jautajumi_result) > 0) {
             <button class="dropbtn" type="submit">Iesniegt</button>
         </form>
     </div>
+    <a href="../home.php" class="btn">Atpakaļ</a>
 </body>
 </html>

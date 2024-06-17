@@ -6,13 +6,14 @@ require("sasniegumi/sasniegumi.php");
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $Lietotajvards = $_SESSION['autorizejies'];
 
-$sql_dzivnieks = "SELECT Bada_limenis, Labsajutas_limenis, Vards, Dzivnieks FROM dzivnieki WHERE ID_Lietotajs='$ID_Lietotajs'";
+$sql_dzivnieks = "SELECT Bada_limenis, Labsajutas_limenis, Reizes_gulets, Vards, Dzivnieks FROM dzivnieki WHERE ID_Lietotajs='$ID_Lietotajs'";
 $result_dzivnieks = mysqli_query($savienojums, $sql_dzivnieks);
 
 if ($result_dzivnieks && mysqli_num_rows($result_dzivnieks) > 0) {
     $row_dzivnieks = mysqli_fetch_assoc($result_dzivnieks);
     $bada_limenis = $row_dzivnieks['Bada_limenis'];
     $labsajutas_limenis = $row_dzivnieks['Labsajutas_limenis'];
+    $reizes_gulets = $row_dzivnieks['Reizes_gulets'];
     $vards = $row_dzivnieks['Vards'];
     $dzivnieks = $row_dzivnieks['Dzivnieks'];
 } else {
@@ -53,6 +54,13 @@ if ($labsajutas_limenis <= 70) {
     apbalvotLietotaju($savienojums, $ID_Lietotajs, 'labsajuta_krities', ['Labsajutas_limenis' => $labsajutas_limenis]);
 }
 
+if ($reizes_gulets == 1) {
+    apbalvotLietotaju($savienojums, $ID_Lietotajs, 'dziv_gulejis', ['Reizes_gulets' => $reizes_gulets]);
+}
+if ($reizes_gulets == 5) {
+    apbalvotLietotaju($savienojums, $ID_Lietotajs, 'dziv_gulejis', ['Reizes_gulets' => $reizes_gulets]);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -77,6 +85,9 @@ if ($labsajutas_limenis <= 70) {
                 <div class="divAttrib">Īpašnieka vārds: <span id="Lietotajvards"><?php echo htmlspecialchars($Lietotajvards); ?></span></div>
                 <div class="divAttrib">Bada līmenis: <span id="bada_limenis"><?php echo $bada_limenis; ?></span></div>
                 <div class="divAttrib">Labsajūtas līmenis: <span id="labsajutas_limenis"><?php echo $labsajutas_limenis; ?></span></div>
+                <div class="dropbtngulet">
+                    <button id="guletPoga" onclick="gulet()"><i class="fa fa-moon"></i> Gulēt</button>
+                </div>
                 <div class="dropbtniziet"><a href='logout.php'>Iziet</a></div>
             </div>
         </div>
@@ -87,40 +98,92 @@ if ($labsajutas_limenis <= 70) {
             <div class="dropbtnizvelne"><a href='viktorina/viktorina.php'><i class="fa fa-question"></i>Viktorīna</a></div>
         </div>
     </div>
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    let badaLimenis = <?php echo $bada_limenis; ?>;
-    let labsajutasLimenis = <?php echo $labsajutas_limenis; ?>;
-    let nauda = <?php echo $nauda; ?>;
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let badaLimenis = <?php echo $bada_limenis; ?>;
+            let labsajutasLimenis = <?php echo $labsajutas_limenis; ?>;
+            let nauda = <?php echo $nauda; ?>;
+            let pedejaReizeGuleta = <?php echo isset($_SESSION['pedeja_reize_guleta']) ? $_SESSION['pedeja_reize_guleta'] : 0; ?>;
+            const guletCooldown = 12 * 60; // 12 minutes
+            const guletPoga = document.getElementById('guletPoga');
 
-    function atjaunotDzivDatus() {
-        badaLimenis = Math.max(0, badaLimenis - 1);
-        labsajutasLimenis = Math.max(0, labsajutasLimenis - 1);
-        nauda += 5;
+            function atjaunotDzivDatus() {
+                badaLimenis = Math.max(0, badaLimenis - 1);
+                labsajutasLimenis = Math.max(0, labsajutasLimenis - 1);
+                nauda += 5;
 
-        document.getElementById("bada_limenis").innerText = badaLimenis;
-        document.getElementById("labsajutas_limenis").innerText = labsajutasLimenis;
-        document.getElementById("nauda").innerText = nauda;
+                document.getElementById("bada_limenis").innerText = badaLimenis;
+                document.getElementById("labsajutas_limenis").innerText = labsajutasLimenis;
+                document.getElementById("nauda").innerText = nauda;
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "atjaunot_dziv_datus.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    console.log("Dati atjaunoti");
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "atjaunot_dziv_datus.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            console.log("Dati atjaunoti");
+                        } else {
+                            console.error("Kluda: " + xhr.statusText);
+                        }
+                    }
+                };
+                xhr.send("badaLimenis=" + badaLimenis + "&labsajutasLimenis=" + labsajutasLimenis + "&nauda=" + nauda);
+            }
+
+            function atjaunotPogu() {
+                const laiks = Math.floor(Date.now() / 1000);
+                const laiksPagajis = laiks - pedejaReizeGuleta;
+                const laiksPalicis = guletCooldown - laiksPagajis;
+
+                if (laiksPalicis > 0) {
+                    guletPoga.disabled = true;
+                    guletPoga.innerHTML = `<i class="fa fa-moon"></i> Gulēt (${Math.floor(laiksPalicis / 60)}:${('0' + (laiksPalicis % 60)).slice(-2)})`;
+                    setTimeout(atjaunotPogu, 1000);
                 } else {
-                    console.error("Kluda: " + xhr.statusText);
+                    guletPoga.disabled = false;
+                    guletPoga.innerHTML = `<i class="fa fa-moon"></i> Gulēt`;
                 }
             }
-        };
-        xhr.send("badaLimenis=" + badaLimenis + "&labsajutasLimenis=" + labsajutasLimenis + "&nauda=" + nauda);
-    }
 
-    atjaunotDzivDatus();
+            if (pedejaReizeGuleta) {
+                atjaunotPogu();
+            }
 
-    setInterval(atjaunotDzivDatus, 30000);
-});
-</script>
+            guletPoga.addEventListener('click', function() {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', 'gulet.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            const response = xhr.responseText.split(",");
+                            const status = response[0];
+                            if (status === 'success') {
+                                alert('Dzīvnieks ir aizmidzis!');
+                                badaLimenis = parseInt(response[1]);
+                                labsajutasLimenis = parseInt(response[2]);
+                                pedejaReizeGuleta = Math.floor(Date.now() / 1000);
+                                atjaunotPogu();
+                            } else if (status === 'cooldown') {
+                                const laiksPalicis = parseInt(response[1]);
+                                pedejaReizeGuleta = Math.floor(Date.now() / 1000) - (guletCooldown - laiksPalicis);
+                                atjaunotPogu();
+                                alert('Jūs nevarat gulēt vēl ' + Math.floor(laiksPalicis / 60) + ' minūtes un ' + (laiksPalicis % 60) + ' sekundes.');
+                            } else {
+                                alert('Kļūda: ' + status);
+                            }
+                        } else {
+                            alert('Kļūda savienojoties ar serveri.');
+                        }
+                    }
+                };
+                xhr.send();
+            });
+
+            atjaunotDzivDatus();
+            setInterval(atjaunotDzivDatus, 30000);
+        });
+    </script>
 </body>
 </html>
