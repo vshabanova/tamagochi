@@ -32,6 +32,7 @@ $naudasBilde = '../public/kapeika.png';
     <link rel="stylesheet" type="text/css" href="../public/spelesstyles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="https://poetry4kids.com/wp-content/uploads/2021/09/I-Think-Id-Like-to-Get-a-Pet-icon-300x300.png">
+    <script src="../public/muzika.js"></script>
     <script>
         function atjaunotKopejoCenu() {
             const daudzumi = document.querySelectorAll('input[type="number"]');

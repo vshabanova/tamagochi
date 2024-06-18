@@ -440,7 +440,7 @@ input[type="number"] {
     cursor: pointer;
     display: block;
     text-decoration: none;
-    width: 259px;
+    width:100%;
 }
 .dropbtngulet button:hover{
   background-color: #cc7f9f;

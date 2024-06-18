@@ -16,6 +16,11 @@ if ($result_dzivnieks && mysqli_num_rows($result_dzivnieks) > 0) {
     $reizes_gulets = $row_dzivnieks['Reizes_gulets'];
     $vards = $row_dzivnieks['Vards'];
     $dzivnieks = $row_dzivnieks['Dzivnieks'];
+
+    if ($bada_limenis == 0 || $labsajutas_limenis == 0) {
+        header("Location: beigas.php");
+        exit;
+    }
 } else {
     echo "Error: " . mysqli_error($savienojums);
 }
@@ -72,6 +77,7 @@ if ($reizes_gulets == 5) {
     <link rel="stylesheet" type="text/css" href="public/spelesstyles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="https://poetry4kids.com/wp-content/uploads/2021/09/I-Think-Id-Like-to-Get-a-Pet-icon-300x300.png">
+    <script src="/tamagochi/public/muzika.js"></script>
 </head>
 <body>
     <div class="speles-container">

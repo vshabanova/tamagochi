@@ -28,6 +28,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     <title>Sasniegumi</title>
     <link rel="stylesheet" type="text/css" href="../public/spelesstyles.css">
     <link rel="icon" type="image/x-icon" href="https://poetry4kids.com/wp-content/uploads/2021/09/I-Think-Id-Like-to-Get-a-Pet-icon-300x300.png">
+    <script src="../public/muzika.js"></script>
 </head>
 <body>
     <div class="speles-container">

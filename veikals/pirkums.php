@@ -72,6 +72,7 @@ if ($kopeja_cena > $tagadeja_nauda) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pirkuma apstiprinājums</title>
     <link rel="stylesheet" type="text/css" href="../public/spelesstyles.css">
+    <script src="../public/muzika.js"></script>
 </head>
 <body>
     <div class="speles-container">

@@ -34,12 +34,13 @@ $kop_nauda = $pareizas_atbildes * $nauda_par_atbildi;
     <link rel="stylesheet" type="text/css" href="../public/spelesstyles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="https://poetry4kids.com/wp-content/uploads/2021/09/I-Think-Id-Like-to-Get-a-Pet-icon-300x300.png">
+    <script src="../public/muzika.js"></script>
 </head>
 <body>
     <div class="speles-container">
     <h2 style="text-align: center;">Viktorīnas Rezultāti</h2>
             <p>Jūs atbildējāt pareizi uz <?php echo htmlspecialchars($pareizas_atbildes); ?> no <?php echo htmlspecialchars($kopskaits); ?> jautājumiem.</p>
-            <p style="text-align: center;">Jūs saņēmāt <?php echo htmlspecialchars($pareizas_atbildes * 20); ?> monētas.</p>
+            <p style="text-align: center;">Jūs saņēmāt <?php echo htmlspecialchars($kop_nauda); ?> monētas.</p>
     </div>
     <a href="../home.php" class="btn">Atpakaļ</a>
 </body>

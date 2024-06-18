@@ -1,16 +1,27 @@
 <?php
 session_start();
 
-if(isset($_POST['Lietotajvards'], $_POST['Parole'], $_POST['autorizeties'])) {
+if (isset($_POST['Lietotajvards'], $_POST['Parole'], $_POST['autorizeties'])) {
     $lietotajvards = $_POST['Lietotajvards'];
     $parole = $_POST['Parole'];
 
-    if(empty($lietotajvards) || empty($parole)) { // Pārbauda vai lietotājvārds un parole nav tukši
+    if (empty($lietotajvards) || empty($parole)) {
         header('Location: login.php?status=empty');
         exit();
     }
 
     require("savienojums/connect_db.php");
+
+    $stmt_kapi = $savienojums->prepare("SELECT COUNT(*) as skaits FROM kapi WHERE Lietotajs_ID = (SELECT Lietotajs_ID FROM lietotaji WHERE Lietotajvards = ?)");
+    $stmt_kapi->bind_param("s", $lietotajvards);
+    $stmt_kapi->execute();
+    $rezultats_kapi = $stmt_kapi->get_result();
+    $kapi_skaits = $rezultats_kapi->fetch_assoc()['skaits'];
+
+    if ($kapi_skaits > 0) {
+        header("Location: speles_beigas.php");
+        exit();
+    }
 
     $stmt = $savienojums->prepare("SELECT Lietotajs_ID, Lietotajvards, Parole FROM lietotaji WHERE Lietotajvards = ?");
     $stmt->bind_param("s", $lietotajvards);
