@@ -196,7 +196,7 @@ function ieladetJaunuHoroskopu() {
 function saktTaimeri() {
     const btn = document.getElementById('generetBtn');
     const taimeris = document.getElementById('taimeris');
-    const beiguLaiks = Date.now() + 10000; // 10 sekundes
+    const beiguLaiks = Date.now() + 10000;
 
     localStorage.setItem('taimerisBeigas', beiguLaiks);
     btn.disabled = true;

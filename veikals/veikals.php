@@ -13,10 +13,25 @@ $nauda = $nauda_row['Nauda'];
 
 // sanem pieejamos edienus
 $nauda_sql = "SELECT Ediens_ID, Nosaukums, Vertiba FROM ediens";
-$ediens_result = mysqli_query($savienojums, $nauda_sql);
+$dzivnieks_sql = "SELECT d.Dzivnieks_ID, d.Dzivnieks, d.Vards 
+                  FROM dzivnieki d 
+                  WHERE d.ID_Lietotajs='$ID_Lietotajs'";
+$dzivnieks_result = mysqli_query($savienojums, $dzivnieks_sql);
+if(mysqli_num_rows($dzivnieks_result) == 0) {
+    header("Location: izveidot_dzivnieku.php");
+    exit();
+}
+$dzivnieks_row = mysqli_fetch_assoc($dzivnieks_result);
+$dzivnieka_tips = $dzivnieks_row['Dzivnieks'];
+
+$edieni_sql = "SELECT e.* 
+               FROM ediens e
+               JOIN dzivnieku_edieni de ON e.Ediens_ID = de.Ediens_ID
+               WHERE de.DzivniekaTips = '$dzivnieka_tips'";
+$edieni_result = mysqli_query($savienojums, $edieni_sql);
 $edieni = [];
-if ($ediens_result && mysqli_num_rows($ediens_result) > 0) {
-    while ($row = mysqli_fetch_assoc($ediens_result)) {
+if ($edieni_result && mysqli_num_rows($edieni_result) > 0) {
+    while ($row = mysqli_fetch_assoc($edieni_result)) {
         $edieni[] = $row;
     }
 }
