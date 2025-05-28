@@ -24,24 +24,58 @@ function iegutZvaigznaklu($dzimsanasDatums, $db) {
         return 'Nezināms';
     }
 
-    $d = new DateTime($dzimsanasDatums);
-    $salidzDatums = '2025-' . $d->format('m-d');
-    $stmt = $db->prepare("SELECT Nosaukums FROM zvaigznaji WHERE ? BETWEEN Datums_no AND Datums_lidz");
-    $stmt->bind_param("s", $salidzDatums);
-    $stmt->execute();
-    $result = $stmt->get_result()->fetch_assoc();
-    
-    return $result['Nosaukums'] ?? 'Nezināms';
+    try {
+        $dzimDatums = new DateTime($dzimsanasDatums);
+        $dzimMenesis = (int)$dzimDatums->format('m');
+        $dzimDiena = (int)$dzimDatums->format('d');
+        $dzimVertiba = $dzimMenesis * 100 + $dzimDiena;
+
+        $result = $db->query("
+            SELECT 
+                Nosaukums,
+                MONTH(Datums_no) as start_month,
+                DAY(Datums_no) as start_day,
+                MONTH(Datums_lidz) as end_month,
+                DAY(Datums_lidz) as end_day
+            FROM zvaigznaji
+            ORDER BY MONTH(Datums_no), DAY(Datums_no)
+        ");
+
+        if (!$result) {
+            throw new Exception("Database query failed: " . $db->error);
+        }
+
+        while ($rinda = $result->fetch_assoc()) {
+        $sakumMenesis = (int)$rinda['sakum_menesis'];
+        $sakumDiena = (int)$rinda['sakum_diena'];
+        $beiguMenesis = (int)$rinda['beigu_menesis'];
+        $beiguDiena = (int)$rinda['beigu_diena'];
+
+            $sakumVertiba = $sakumMenesis * 100 + $sakumDiena;
+            $beiguVertiba = $beiguMenesis * 100 + $beiguDiena;
+
+            if ($sakumVertiba > $beiguVertiba) {
+                if ($dzimVertiba >= $sakumVertiba) {
+                    return $rinda['Nosaukums'];
+                }
+                elseif ($dzimVertiba <= $beiguVertiba) {
+                    return $rinda['Nosaukums'];
+                }
+            } 
+            else {
+                if ($dzimVertiba >= $sakumVertiba && $dzimVertiba <= $beiguVertiba) {
+                    return $rinda['Nosaukums'];
+                }
+            }
+        }
+
+        return 'Nezināms';
+
+    } catch (Exception $e) {
+        error_log("Error in iegutZvaigznaklu: " . $e->getMessage());
+        return 'Nezināms';
+    }
 }
-
-$today = date('Y-m-d');
-$zvaigznaks = iegutZvaigznaklu($lietotajs['Dzim_dat'], $db);
-
-$stmt = $db->prepare("SELECT Teksts FROM horoskopi WHERE Lietotajs_ID = ? AND Datums = ?");
-$stmt->bind_param("is", $_SESSION['Lietotajs_ID'], $today);
-$stmt->execute();
-$result = $stmt->get_result();
-$existingHoroscope = $result->fetch_assoc();
 
 ?>
 

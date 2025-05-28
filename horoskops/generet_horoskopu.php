@@ -1,5 +1,4 @@
 <?php
-
 header('Content-Type: application/json');
 
 $atbilde = [
@@ -29,6 +28,7 @@ try {
         throw new Exception('Datubāzes savienojuma kļūda', 500);
     }
 
+    // Get user's birth date
     $stmt = $db->prepare("SELECT Dzim_dat FROM lietotaji WHERE Lietotajs_ID = ?");
     if (!$stmt) {
         throw new Exception('Datubāzes pieprasījuma kļūda', 500);
@@ -46,31 +46,61 @@ try {
         throw new Exception('Nav pieejams dzimšanas datums', 400);
     }
 
-    $gads = date('Y');
-    $d = new DateTime($lietotajs['Dzim_dat']);
-    $salidzDatums = $gads . '-' . $d->format('m-d');
+    $dzimDatums = new DateTime($lietotajs['Dzim_dat']);
+    $dzimMenesis = (int)$dzimDatums->format('m');
+    $dzimDiena = (int)$dzimDatums->format('d');
+    $dzimVertiba = $dzimMenesis * 100 + $dzimDiena;
 
-    if ($d->format('m-d') === '02-29') {
-        $salidzDatums = $gads . '-02-28';
+    $zvaigznajusql = $db->query("
+        SELECT 
+            Zvaigznajs_ID,
+            Nosaukums,
+            MONTH(Datums_no) as sakum_menesis,
+            DAY(Datums_no) as sakum_diena,
+            MONTH(Datums_lidz) as beigu_menesis,
+            DAY(Datums_lidz) as beigu_diena
+        FROM zvaigznaji
+        ORDER BY MONTH(Datums_no), DAY(Datums_no)
+    ");
+
+    if (!$zvaigznajusql) {
+        throw new Exception("Database query failed: " . $db->error);
     }
 
-    $stmt = $db->prepare("SELECT Zvaigznajs_ID, Nosaukums FROM zvaigznaji WHERE ? BETWEEN Datums_no AND Datums_lidz");
-    if (!$stmt) {
-        throw new Exception('Datubāzes pieprasījuma kļūda', 500);
+    $atrastaZime = null;
+    while ($rinda = $zvaigznajusql->fetch_assoc()) {
+        $sakumMenesis = (int)$rinda['sakum_menesis'];
+        $sakumDiena = (int)$rinda['sakum_diena'];
+        $beiguMenesis = (int)$rinda['beigu_menesis'];
+        $beiguDiena = (int)$rinda['beigu_diena'];
+
+        $sakumVertiba = $sakumMenesis * 100 + $sakumDiena;
+        $beiguVertiba = $beiguMenesis * 100 + $beiguDiena;
+
+        if ($sakumVertiba > $beiguVertiba) {
+            if ($dzimVertiba >= $sakumVertiba) {
+                $atrastaZime = $rinda;
+                break;
+            }
+            elseif ($dzimVertiba <= $beiguVertiba) {
+                $atrastaZime = $rinda;
+                break;
+            }
+        } 
+        else {
+            if ($dzimVertiba >= $sakumVertiba && $dzimVertiba <= $beiguVertiba) {
+                $atrastaZime = $rinda;
+                break;
+            }
+        }
     }
 
-    $stmt->bind_param("s", $salidzDatums);
-    if (!$stmt->execute()) {
-        throw new Exception('Neizdevās atrast zvaigznāju', 500);
-    }
-
-    $zRinda = $stmt->get_result()->fetch_assoc();
-    if (!$zRinda) {
+    if (!$atrastaZime) {
         throw new Exception('Zvaigznājs nav atrasts datubāzē', 404);
     }
 
     $generators = new HoroskopuGeneretajs();
-    $horoskops = $generators->generetDienasHoroskopu($zRinda['Nosaukums'], date('Y-m-d'));
+    $horoskops = $generators->generetDienasHoroskopu($atrastaZime['Nosaukums'], date('Y-m-d'));
     
     if (empty($horoskops)) {
         throw new Exception('Neizdevās ģenerēt horoskopu', 500);
@@ -81,14 +111,14 @@ try {
         throw new Exception('Datubāzes pieprasījuma kļūda', 500);
     }
 
-    $stmt->bind_param("iiss", $_SESSION['Lietotajs_ID'], $zRinda['Zvaigznajs_ID'], $atbilde['data']['datums'], $horoskops);
+    $stmt->bind_param("iiss", $_SESSION['Lietotajs_ID'], $atrastaZime['Zvaigznajs_ID'], $atbilde['data']['datums'], $horoskops);
     if (!$stmt->execute()) {
         throw new Exception('Neizdevās saglabāt horoskopu', 500);
     }
 
     $atbilde['success'] = true;
     $atbilde['data']['teksts'] = $horoskops;
-    $atbilde['data']['zvaigznajs'] = $zRinda['Nosaukums'];
+    $atbilde['data']['zvaigznajs'] = $atrastaZime['Nosaukums'];
 
 } catch (Exception $e) {
     $atbilde['error'] = [
