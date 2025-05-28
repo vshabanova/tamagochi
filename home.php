@@ -111,8 +111,14 @@ if ($reizes_gulets == 5) {
             let labsajutasLimenis = <?php echo $labsajutas_limenis; ?>;
             let nauda = <?php echo $nauda; ?>;
             let pedejaReizeGuleta = <?php echo isset($_SESSION['pedeja_reize_guleta']) ? $_SESSION['pedeja_reize_guleta'] : 0; ?>;
-            const guletCooldown = 12 * 60; // 12 minutes
+            let guletInterval = null;
             const guletPoga = document.getElementById('guletPoga');
+
+            function atjaunotDzivDatusFrontend() {
+            document.getElementById("bada_limenis").innerText = badaLimenis;
+            document.getElementById("labsajutas_limenis").innerText = labsajutasLimenis;
+            document.getElementById("nauda").innerText = nauda;
+        }
 
             function atjaunotDzivDatus() {
                 badaLimenis = Math.max(0, badaLimenis - 1);
@@ -137,55 +143,46 @@ if ($reizes_gulets == 5) {
                 };
                 xhr.send("badaLimenis=" + badaLimenis + "&labsajutasLimenis=" + labsajutasLimenis + "&nauda=" + nauda);
             }
-
-            function atjaunotPogu() {
-                const laiks = Math.floor(Date.now() / 1000);
-                const laiksPagajis = laiks - pedejaReizeGuleta;
-                const laiksPalicis = guletCooldown - laiksPagajis;
-
-                if (laiksPalicis > 0) {
-                    guletPoga.disabled = true;
-                    guletPoga.innerHTML = `<i class="fa fa-moon"></i> Gulēt (${Math.floor(laiksPalicis / 60)}:${('0' + (laiksPalicis % 60)).slice(-2)})`;
-                    setTimeout(atjaunotPogu, 1000);
-                } else {
-                    guletPoga.disabled = false;
-                    guletPoga.innerHTML = `<i class="fa fa-moon"></i> Gulēt`;
-                }
-            }
-
-            if (pedejaReizeGuleta) {
-                atjaunotPogu();
-            }
-
-            guletPoga.addEventListener('click', function() {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', 'gulet.php', true);
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            const response = xhr.responseText.split(",");
-                            const status = response[0];
-                            if (status === 'success') {
-                                alert('Dzīvnieks ir aizmidzis!');
-                                badaLimenis = parseInt(response[1]);
-                                labsajutasLimenis = parseInt(response[2]);
-                                pedejaReizeGuleta = Math.floor(Date.now() / 1000);
-                                atjaunotPogu();
-                            } else if (status === 'cooldown') {
-                                const laiksPalicis = parseInt(response[1]);
-                                pedejaReizeGuleta = Math.floor(Date.now() / 1000) - (guletCooldown - laiksPalicis);
-                                atjaunotPogu();
-                                alert('Jūs nevarat gulēt vēl ' + Math.floor(laiksPalicis / 60) + ' minūtes un ' + (laiksPalicis % 60) + ' sekundes.');
-                            } else {
-                                alert('Kļūda: ' + status);
-                            }
-                        } else {
-                            alert('Kļūda savienojoties ar serveri.');
+            function guletSolis() {
+            fetch("gulet_update.php")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "progress") {
+                        badaLimenis = data.bads;
+                        labsajutasLimenis = data.labsajuta;
+                        atjaunotDzivDatusFrontend();
+                        guletPoga.innerHTML = `<i class="fa fa-moon"></i> Guļ (${data.solis}/6)`;
+                    } else if (data.status === "done") {
+                        if (guletInterval) {
+                            clearInterval(guletInterval);
+                            guletInterval = null;
                         }
+                        guletPoga.disabled = false;
+                        guletPoga.innerHTML = `<i class="fa fa-moon"></i> Gulēt`;
+                        alert("Gulēšana pabeigta!");
                     }
-                };
-                xhr.send();
+                });
+        }
+            atjaunotDzivDatusFrontend();
+
+            guletPoga.addEventListener("click", function() {
+                guletPoga.disabled = true;
+                guletPoga.innerHTML = `<i class="fa fa-moon"></i> Guļ (0/6)`;
+                guletInterval = setInterval(guletSolis, 2000);
+                
+                fetch("sakt_gulet.php")
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status !== "ok") {
+                            alert("Kļūda: Neizdevās sākt gulēt");
+                            guletPoga.disabled = false;
+                            guletPoga.innerHTML = `<i class="fa fa-moon"></i> Gulēt`;
+                            if (guletInterval) {
+                                clearInterval(guletInterval);
+                                guletInterval = null;
+                            }
+                        }
+                    });
             });
 
             atjaunotDzivDatus();
