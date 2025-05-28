@@ -101,6 +101,7 @@ if ($reizes_gulets == 5) {
             <div class="dropbtnizvelne"><a href='veikals/veikals.php'><i class='fa fa-store'></i>Veikals</a></div>
             <div class="dropbtnizvelne"><a href='ledusskapis/ledusskapis.php'><i class="fa-solid fa-bowl-food"></i>Ledusskapis</a></div>
             <div class="dropbtnizvelne"><a href='sasniegumi/sasniegumiapskatit.php'><i class="fa fa-star"></i>Sasniegumi</a></div>
+            <div class="dropbtnizvelne"><a href='horoskops/horoskops.php'><i class="fa fa-moon"></i>Horoskops</a></div>
             <div class="dropbtnizvelne"><a href='viktorina/viktorina.php'><i class="fa fa-question"></i>Viktorīna</a></div>
         </div>
     </div>

@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $parole = $_POST['Parole'];
     $epasts = $_POST["Epasts"];
     $vards = $_POST["Vards"];
+    $dzim_dat = $_POST["Dzim_dat"];
     $dzivnieks = $_POST["Dzivnieks"];
     require("savienojums/connect_db.php");
 
@@ -21,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($rezultats) > 0) {
         header('Location: register.php?status=sameusername');
     }else{
-        $sql = "INSERT INTO lietotaji (Lietotajvards, Parole, Epasts, Nauda) VALUES ('$lietotajvards', '$hashed_parole', '$epasts', 50)";
+        $sql = "INSERT INTO lietotaji (Lietotajvards, Parole, Epasts, Nauda, Dzim_dat) VALUES ('$lietotajvards', '$hashed_parole', '$epasts', 50, '$dzim_dat')";
 
         if (mysqli_query($savienojums, $sql)) {
             $ID_Lietotajs = mysqli_insert_id($savienojums);
@@ -92,6 +93,10 @@ echo'
                 <div class="form-group-login">
                     <label for="Vards">Mīluļa vārds:</label>
                     <input type="text" id="Vards" name="Vards" placeholder="Džeks" required>
+                </div>
+                <div class="form-group-login">
+                    <label for="Dzim_dat">Dzimšanas datums:</label>
+                    <input type="date" id="Dzim_dat" name="Dzim_dat" placeholder="DD-MM-GGGG" required>
                 </div>
 
                     <input type="submit" class="dropbtnreg" name="registreties" value="Reģistrēties">

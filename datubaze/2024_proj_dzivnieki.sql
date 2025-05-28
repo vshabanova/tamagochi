@@ -158,7 +158,8 @@ CREATE TABLE `lietotaji` (
   `Nauda` int(11) NOT NULL,
   `Viktorina_pabeigta` tinyint(1) DEFAULT 0,
   `Viktorina_Pareizas_Atbildes` int(11) NOT NULL,
-  `Viktorina_Kopskaits` int(11) NOT NULL
+  `Viktorina_Kopskaits` int(11) NOT NULL,
+  `Dzim_dat` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -214,6 +215,18 @@ CREATE TABLE `transakcijas` (
   `Daudzums` int(2) NOT NULL,
   `Nauda` int(11) NOT NULL,
   `Datums_laiks` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Table structure for table `transakcijas`
+--
+
+CREATE TABLE `horoskopi` (
+  `Horoskops_ID` int(11) NOT NULL,
+  `Lietotajs_ID` int(11) NOT NULL,
+  `Zvaigznajs` int(11) NOT NULL,
+  `Datums` int(2) NOT NULL,
+  `Teksts` TEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -290,6 +303,13 @@ ALTER TABLE `transakcijas`
   ADD KEY `Lietotajs_Transakcijas` (`Lietotajs_ID`),
   ADD KEY `Ediens_Transakcijas` (`Ediens_ID`);
 
+  --
+-- Indexes for table `transakcijas`
+--
+ALTER TABLE `horoskopi`
+  ADD PRIMARY KEY (`Horoskops_ID`),
+  ADD KEY `Lietotajs_Horoskopi` (`Lietotajs_ID`);
+
 --
 -- AUTO_INCREMENT for dumped tables
 --
@@ -353,6 +373,12 @@ ALTER TABLE `sasniegumu_banka`
 --
 ALTER TABLE `transakcijas`
   MODIFY `Transakcijas_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+
+  --
+-- AUTO_INCREMENT for table `transakcijas`
+--
+ALTER TABLE `horoskopi`
+  MODIFY `Horoskops_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- Constraints for dumped tables

@@ -32,8 +32,8 @@ h1{
   padding:20px 20px;
   border-radius:50px;
   background-color:rgba(246, 229, 247, 0.85);
-  min-width: 367px;
   margin: 5px;
+  max-width: 800px;
 }
 .sakuma-konteineris{
   display: flex;
@@ -281,7 +281,6 @@ a.btn:active::before {
   top: 10px;
   right: 10px;
   display: inline-block;
-  float: right;
 }
 .veikals-nauda {
   display: inline-block;
@@ -445,4 +444,62 @@ input[type="number"] {
 .dropbtngulet button:hover{
   background-color: #cc7f9f;
   color: #ffffff;
+}
+.teksts p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  text-align: justify;
+}
+#teksts span {
+  opacity: 0;
+}
+
+.dropbtnizvelne-horoskops {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+#LoadingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#taimeris {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+button {
+  width: 200px;
+  height: 50px;
+}
+
+.dropbtnizvelne-horoskops a i {
+  margin-right: 3px;
+}
+.dropbtnizvelne-horoskops a{
+  font-family: "Rubik", sans-serif;
+  background-color: #f9c4d2;
+  font-weight: 600;
+  color: #382b22;
+  text-align: center;
+  border: 2px solid #cc7f9f;
+  border-radius: 0.75em;
+  transition: ease 0.15s;
+  transform-style: preserve-3d;
+  padding: 10px 15px;
+  margin:15px 2px 15px 0px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
 }

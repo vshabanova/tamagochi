@@ -2,7 +2,7 @@
 $host = "localhost";
 $username = "root";
 $password = "";
-$db = "2024_proj_dzivnieki";
+$db = "2025_proj_dzivnieki";
 
 
 $savienojums = mysqli_connect($host, $username, $password, $db);
