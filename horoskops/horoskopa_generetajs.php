@@ -53,23 +53,41 @@ class HoroskopuGeneretajs {
         return $pozicijas;
     }
 
-    private function generetPamatekstu($datums, $pozicijas, $zime) {
-        $latviskaisNosaukums = $this->tulkotZodiaku($zime);
-        $pozicijuApraksts = '';
-        foreach ($pozicijas as $planeta => $house) {
-            $desc = $this->houses[$house] ?? 'nav apraksta';
-            $pozicijuApraksts .= "{$planeta} ir {$house}. mājā ({$desc}). ";
-        }
-    
-        $raksturs = $this->zodiakaRaksturiezimes[$zime] ?? ['element' => 'Nezināms', 'modality' => 'Nezināms', 'personality' => 'Nezināms'];
-    
-        return "Uzraksti tikai vienu īsu, gramatiski pareizu, emocionālu un iedvesmojošu horoskopa tekstu latviešu valodā zodiaka zīmei \"{$latviskaisNosaukums}\" ({$datums}). 
-                Nelieto ievadu, virsrakstus vai datuma atkārtošanu, un **neapraksti zodiaka zīmi, tikai raksturo tās raksturu un ietekmi.** 
-                Zīmes raksturs: elements – {$raksturs['element']}, modalitāte – {$raksturs['modality']}, personība – {$raksturs['personality']}. 
-                Tekstam jābūt plūstošam, vienmērīgam, ar skaidru nobeigumu un punktu. 
-                **Izvairies no jebkādas zodiaka zīmes nosaukuma lietošanas (piemēram, Auns, Vēzis, Dvīņi).**";
+    private function izveletiesNoskanu() {
+        $noskanasVarianti = [
+        'negatīva', 'negatīva', 'negatīva',
+        'neitrāla', 'neitrāla', 'neitrāla',                         
+        'pozitīva', 'pozitīva', 'pozitīva'                                      
+    ];
+    return $noskanasVarianti[array_rand($noskanasVarianti)];
+}
 
+
+    private function generetPamatekstu($datums, $pozicijas, $zime) {
+    $latviskaisNosaukums = $this->tulkotZodiaku($zime);
+    $pozicijuApraksts = '';
+    foreach ($pozicijas as $planeta => $house) {
+        $desc = $this->houses[$house] ?? 'nav apraksta';
+        $pozicijuApraksts .= "{$planeta} ir {$house}. mājā ({$desc}). ";
     }
+
+    $raksturs = $this->zodiakaRaksturiezimes[$zime] ?? [
+        'element' => 'Nezināms',
+        'modality' => 'Nezināms',
+        'personality' => 'Nezināms'
+    ];
+
+    $noskana = $this->izveletiesNoskanu();
+
+    return "Uzraksti tikai vienu īsu, gramatiski pareizu, emocionālu un iedvesmojošu horoskopa tekstu latviešu valodā zodiaka zīmei \"{$latviskaisNosaukums}\" ({$datums}). 
+            Nelieto ievadu, virsrakstus vai datuma atkārtošanu, un **neapraksti zodiaka zīmi, tikai raksturo tās raksturu un ietekmi.** 
+            Zīmes raksturs: elements – {$raksturs['element']}, modalitāte – {$raksturs['modality']}, personība – {$raksturs['personality']}. 
+            Planētu pozīcijas: {$pozicijuApraksts} 
+            Tekstam jābūt plūstošam, vienmērīgam, ar skaidru nobeigumu un punktu. 
+            **Izvairies no jebkādas zodiaka zīmes nosaukuma lietošanas (piemēram, Auns, Vēzis, Dvīņi).** 
+            Teksta emocionālajai noskaņai jābūt: **{$noskana}**.";
+}
+
     
     
 
