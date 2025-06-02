@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-if (isset($_GET['status']) && $_GET['status'] === 'success') {
-    header("Refresh:2; url=login.php"); 
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $lietotajvards = $_POST["Lietotajvards"];
@@ -26,11 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (mysqli_query($savienojums, $sql)) {
             $ID_Lietotajs = mysqli_insert_id($savienojums);
+            $_SESSION['Lietotajs_ID'] = $ID_Lietotajs;
+            $_SESSION['autorizejies'] = true;
 
         if ($ID_Lietotajs) {
         $sql = "INSERT INTO dzivnieki (ID_Lietotajs, Vards, Dzivnieks, Bada_limenis, Labsajutas_limenis) VALUES ('$ID_Lietotajs', '$vards', '$dzivnieks', 100, 100)";
             if (mysqli_query($savienojums, $sql)) {
-                header('Location: register.php?status=success');
+                header('Location: home.php');
+                exit;
             } else {
                 echo "Kļūda: " . $sql . "<br>" . mysqli_error($savienojums);
             }
@@ -46,10 +45,6 @@ if(isset($_GET['status'])) {
         case 'sameusername':
             $statusMessage = "Lietotajvārds ir aizņemts!";
             $statusClass = 'error';
-            break;
-        case 'success':
-            $statusMessage = "Reģistrācija veiksmīga!";
-            $statusClass = 'success';
             break;
     }
 }  

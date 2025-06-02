@@ -33,10 +33,10 @@ function iegutZvaigznaklu($dzimsanasDatums, $db) {
         $result = $db->query("
             SELECT 
                 Nosaukums,
-                MONTH(Datums_no) as start_month,
-                DAY(Datums_no) as start_day,
-                MONTH(Datums_lidz) as end_month,
-                DAY(Datums_lidz) as end_day
+                MONTH(Datums_no) as sakum_menesis,
+                DAY(Datums_no) as sakum_diena,
+                MONTH(Datums_lidz) as beigu_menesis,
+                DAY(Datums_lidz) as beigu_diena
             FROM zvaigznaji
             ORDER BY MONTH(Datums_no), DAY(Datums_no)
         ");
@@ -210,6 +210,7 @@ function ieladetJaunuHoroskopu() {
             return atbilde.json();
         })
         .then(data => {
+            console.log('Servera atbilde:', data); // ← redzēsi īsto struktūru
             if (!data.success || !data.data?.teksts) {
                 throw new Error(data.error?.message || 'Nepareiza horoskopa struktūra');
             }
