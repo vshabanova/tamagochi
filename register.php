@@ -3,7 +3,7 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $lietotajvards = $_POST["Lietotajvards"];
+    $Lietotajvards = $_POST["Lietotajvards"];
     $parole = $_POST['Parole'];
     $epasts = $_POST["Epasts"];
     $vards = $_POST["Vards"];
@@ -11,18 +11,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dzivnieks = $_POST["Dzivnieks"];
     require("savienojums/connect_db.php");
 
-    $sql = "SELECT * FROM lietotaji WHERE Lietotajvards='$lietotajvards'";
+    $sql = "SELECT * FROM lietotaji WHERE Lietotajvards='$Lietotajvards'";
     $rezultats = mysqli_query($savienojums, $sql);
     $hashed_parole = password_hash($_POST['Parole'], PASSWORD_DEFAULT);
 
     if (mysqli_num_rows($rezultats) > 0) {
         header('Location: register.php?status=sameusername');
     }else{
-        $sql = "INSERT INTO lietotaji (Lietotajvards, Parole, Epasts, Nauda, Dzim_dat) VALUES ('$lietotajvards', '$hashed_parole', '$epasts', 50, '$dzim_dat')";
+        $sql = "INSERT INTO lietotaji (Lietotajvards, Parole, Epasts, Nauda, Dzim_dat) VALUES ('$Lietotajvards', '$hashed_parole', '$epasts', 50, '$dzim_dat')";
 
         if (mysqli_query($savienojums, $sql)) {
             $ID_Lietotajs = mysqli_insert_id($savienojums);
             $_SESSION['Lietotajs_ID'] = $ID_Lietotajs;
+            $_SESSION['Lietotajvards'] = $Lietotajvards;
             $_SESSION['autorizejies'] = true;
 
         if ($ID_Lietotajs) {

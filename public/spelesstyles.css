@@ -503,3 +503,35 @@ button {
   display: inline-block;
   text-decoration: none;
 }
+.noskana {
+    font-weight: bold;
+    margin: 10px 0;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.noskana.positive {
+    color: #2ecc71 !important;
+}
+
+.noskana.neutral {
+    color: #f39c12 !important;
+}
+
+.noskana.negative {
+    color: #e74c3c !important;
+}
+.bonuss {
+    font-weight: bold !important;
+    margin: 10px 0 !important;
+    font-size: 1.1em !important;
+    text-align: center;
+}
+
+.bonuss.positive {
+    color: #2ecc71 !important;
+}
+
+.bonuss.negative {
+    color: #e74c3c !important;
+}

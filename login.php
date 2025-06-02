@@ -2,10 +2,10 @@
 session_start();
 
 if (isset($_POST['Lietotajvards'], $_POST['Parole'], $_POST['autorizeties'])) {
-    $lietotajvards = $_POST['Lietotajvards'];
+    $Lietotajvards = $_POST['Lietotajvards'];
     $parole = $_POST['Parole'];
 
-    if (empty($lietotajvards) || empty($parole)) {
+    if (empty($Lietotajvards) || empty($parole)) {
         header('Location: login.php?status=empty');
         exit();
     }
@@ -13,7 +13,7 @@ if (isset($_POST['Lietotajvards'], $_POST['Parole'], $_POST['autorizeties'])) {
     require("savienojums/connect_db.php");
 
     $stmt_kapi = $savienojums->prepare("SELECT COUNT(*) as skaits FROM kapi WHERE Lietotajs_ID = (SELECT Lietotajs_ID FROM lietotaji WHERE Lietotajvards = ?)");
-    $stmt_kapi->bind_param("s", $lietotajvards);
+    $stmt_kapi->bind_param("s", $Lietotajvards);
     $stmt_kapi->execute();
     $rezultats_kapi = $stmt_kapi->get_result();
     $kapi_skaits = $rezultats_kapi->fetch_assoc()['skaits'];
@@ -24,14 +24,14 @@ if (isset($_POST['Lietotajvards'], $_POST['Parole'], $_POST['autorizeties'])) {
     }
 
     $stmt = $savienojums->prepare("SELECT Lietotajs_ID, Lietotajvards, Parole FROM lietotaji WHERE Lietotajvards = ?");
-    $stmt->bind_param("s", $lietotajvards);
+    $stmt->bind_param("s", $Lietotajvards);
     $stmt->execute();
     $rezultats = $stmt->get_result();
     $lietotajs = $rezultats->fetch_assoc();
 
     if ($lietotajs && password_verify($parole, $lietotajs['Parole'])) {
         $_SESSION['Lietotajs_ID'] = $lietotajs['Lietotajs_ID'];
-        $_SESSION['autorizejies'] = $lietotajs['Lietotajvards'];
+        $_SESSION['Lietotajvards'] = $lietotajs['Lietotajvards'];
         header('Location: home.php');
         exit();
     } else {

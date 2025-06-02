@@ -4,7 +4,7 @@ require("savienojums/connect_db.php");
 require("sasniegumi/sasniegumi.php");
 
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
-$Lietotajvards = $_SESSION['autorizejies'];
+$Lietotajvards = $_SESSION['Lietotajvards'];
 
 $sql_dzivnieks = "SELECT Bada_limenis, Labsajutas_limenis, Reizes_gulets, Vards, Dzivnieks FROM dzivnieki WHERE ID_Lietotajs='$ID_Lietotajs'";
 $result_dzivnieks = mysqli_query($savienojums, $sql_dzivnieks);

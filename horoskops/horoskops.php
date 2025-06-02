@@ -13,6 +13,13 @@ if ($db->connect_error) {
     die("Connection failed: " . $db->connect_error);
 }
 
+$today = date('Y-m-d');
+$stmt = $db->prepare("SELECT * FROM horoskopi WHERE Lietotajs_ID = ? AND DATE(Datums) = ?");
+$stmt->bind_param("is", $_SESSION['Lietotajs_ID'], $today);
+$stmt->execute();
+$result = $stmt->get_result();
+$alreadyGenerated = $result->num_rows > 0;
+
 $stmt = $db->prepare("SELECT * FROM lietotaji WHERE Lietotajs_ID = ?");
 $stmt->bind_param("i", $_SESSION['Lietotajs_ID']);
 $stmt->execute();
@@ -91,24 +98,33 @@ function iegutZvaigznaklu($dzimsanasDatums, $db) {
     <script src="/tamagochi/public/muzika.js"></script>
 </head>
 <body>
-
+    <a href='../home.php' class='btn'>Atpakaļ</a>
     <div class="speles-container">
     <div class="transakcijash2"><h1>Mans horoskops</h1></div>
         <div class="horoskops" id="horoskopsBloks" style="display: none;">
             <div class="datums" id="datums"></div>
             <div class="zvaigznajs">Zodiaka zīme: <?= htmlspecialchars($zvaigznaks) ?></div>
+            <div class="noskana" id="noskana"></div>
+            <div class="bonuss" id="bonuss"></div>
             <div class="teksts"><p id="teksts"></p></div>
         </div>
 
         <div class="dropbtnizvelne-horoskops">
-    <button id="generetBtn" class="dropbtn">Ģenerēt horoskopu</button>
-    <div id="loadingIcon" style="display: none;">
-        <i class="fa fa-spinner fa-spin" style="font-size: 24px;"></i>
+            <button id="generetBtn" class="dropbtn" <?= $alreadyGenerated ? 'disabled' : '' ?>>
+                <?= $alreadyGenerated ? 'Limits ir pārsniegts' : 'Ģenerēt horoskopu' ?>
+            </button>
+            <div id="loadingIcon" style="display: none;">
+                <i class="fa fa-spinner fa-spin" style="font-size: 24px;"></i>
+            </div>
+            <div id="taimeris"></div>
+            <?php if ($alreadyGenerated): ?>
+                <div class="info-message">Nākamo horoskopu varēsiet saņemt rīt!</div>
+            <?php endif; ?>
+        </div>
     </div>
-    <div id="taimeris"></div>
-</div>
-</div>
-        <a href='../home.php' class='btn'>Atpakaļ</a>
+    <div class="transakcijas-button">
+        <a href="horoskopu_vesture.php" class="btn">Mana Horoskopu Vēsture</a>
+    </div>
 
 
 <script>
@@ -118,6 +134,8 @@ function saglabatHoroskopu(horoskops) {
             teksts: horoskops.teksts,
             datums: horoskops.datums,
             zvaigznajs: horoskops.zvaigznajs,
+            reakcija: horoskops.reakcija,
+            bonuss: horoskops.bonuss,
             saglabats: Date.now(),
             lietotajsId: <?= $_SESSION['Lietotajs_ID'] ?? 0 ?>
         };
@@ -134,7 +152,7 @@ function ieladetHoroskopu() {
         if (saglabats) {
             const data = JSON.parse(saglabats);
             
-            if (!data || !data.teksts || !data.datums) {
+            if (!data || !data.teksts || !data.datums || !data.reakcija) {
                 console.error('Nepareizi horoskopa dati:', data);
                 localStorage.removeItem('horoskops_' + <?= $_SESSION['Lietotajs_ID'] ?? 0 ?>);
                 return;
@@ -159,6 +177,29 @@ function attelotHoroskopu(horoskops) {
     try {
         document.getElementById('datums').textContent = horoskops.datums;
         document.querySelector('.zvaigznajs').textContent = `Zodiaka zīme: ${horoskops.zvaigznajs}`;
+        
+        const noskanaElement = document.getElementById('noskana');
+        if (horoskops.reakcija) {
+            noskanaElement.textContent = `Noskaņa šim rakstam ir ${horoskops.reakcija}`;
+            noskanaElement.className = 'noskana ' + 
+                (horoskops.reakcija === 'pozitīva' ? 'positive' : 
+                 horoskops.reakcija === 'neitrāla' ? 'neutral' : 'negative');
+        } else {
+            noskanaElement.textContent = '';
+        }
+        
+        const bonussElement = document.getElementById('bonuss');
+        if (horoskops.bonuss !== undefined) {
+            const bonusText = horoskops.bonuss > 0 ? `Lietotājs saņem +${horoskops.bonuss} labsajūtas punktus` : 
+                               horoskops.bonuss < 0 ? `Lietotājs saņem ${horoskops.bonuss} labsajūtas punkti` : 
+                               'Labsajūtas līmenis nemainās';
+            bonussElement.textContent = bonusText;
+            bonussElement.className = 'bonuss ' + 
+                (horoskops.bonuss > 0 ? 'positive' : 
+                 horoskops.bonuss < 0 ? 'negative' : '');
+        } else {
+            bonussElement.textContent = '';
+        }
         
         const tekstsElements = document.getElementById('teksts');
         tekstsElements.innerHTML = '';
@@ -193,72 +234,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.getElementById('generetBtn').addEventListener('click', function() {
-    saktTaimeri();
-    paradiIeladi(true);
-    ieladetJaunuHoroskopu();
-});
-
-function ieladetJaunuHoroskopu() {
-    paradiIeladi(true);
+document.getElementById('generetBtn')?.addEventListener('click', async function() {
+    if (this.disabled) return;
     
-    fetch('generet_horoskopu.php')
-        .then(atbilde => {
-            if (!atbilde.ok) {
-                throw new Error('Servera atbilde nav korekta');
-            }
-            return atbilde.json();
-        })
-        .then(data => {
-            console.log('Servera atbilde:', data); // ← redzēsi īsto struktūru
-            if (!data.success || !data.data?.teksts) {
-                throw new Error(data.error?.message || 'Nepareiza horoskopa struktūra');
-            }
-            
+    const loadingIcon = document.getElementById('loadingIcon');
+    loadingIcon.style.display = 'block';
+    this.disabled = true;
+    
+    try {
+        const response = await fetch('generet_horoskopu.php');
+        const data = await response.json();
+        
+        if (data.success) {
             saglabatHoroskopu(data.data);
             attelotHoroskopu(data.data);
             document.getElementById('horoskopsBloks').style.display = 'block';
-        })
-        .catch(kļūda => {
-            console.error('Horoskopa ielādes kļūda:', kļūda);
-            alert(kļūda.message || 'Radās kļūda, mēģiniet vēlāk');
-        })
-        .finally(() => {
-            paradiIeladi(false);
-        });
-}
-
-function saktTaimeri() {
-    const btn = document.getElementById('generetBtn');
-    const taimeris = document.getElementById('taimeris');
-    const beiguLaiks = Date.now() + 10000;
-
-    localStorage.setItem('taimerisBeigas', beiguLaiks);
-    btn.disabled = true;
-    atjaunotTaimeri();
-}
-
-function atjaunotTaimeri() {
-    const taimeris = document.getElementById('taimeris');
-    const btn = document.getElementById('generetBtn');
-    const beiguLaiks = parseInt(localStorage.getItem('taimerisBeigas') || 0);
-    const atlikusais = Math.ceil((beiguLaiks - Date.now()) / 1000);
-
-    if (atlikusais > 0) {
-        taimeris.textContent = `Lūdzu, uzgaidi ${atlikusais} sek.`;
-        setTimeout(atjaunotTaimeri, 1000);
-    } else {
-        taimeris.textContent = '';
-        btn.disabled = false;
-        btn.textContent = 'Ģenerēt horoskopu';
-        localStorage.removeItem('taimerisBeigas');
+        } else {
+            alert('Kļūda: ' + (data.error?.message || 'Nezināma kļūda'));
+        }
+    } catch (error) {
+        console.error('Kļūda:', error);
+        alert('Radās kļūda, mēģiniet vēlāk');
+    } finally {
+        loadingIcon.style.display = 'none';
     }
-}
+});
 
 function paradiIeladi(paradit) {
     document.getElementById('loadingIcon').style.display = paradit ? 'block' : 'none';
 }
-</script>
+document.addEventListener('DOMContentLoaded', function() {
+        ieladetHoroskopu();
+        
+        // Check if already generated today
+        const alreadyGenerated = <?= $alreadyGenerated ? 'true' : 'false' ?>;
+        if (alreadyGenerated) {
+            document.getElementById('generetBtn').disabled = true;
+        }
+        
+        const beiguLaiks = parseInt(localStorage.getItem('taimerisBeigas') || 0);
+        if (beiguLaiks > Date.now()) {
+            document.getElementById('generetBtn').disabled = true;
+            atjaunotTaimeri();
+        }
+    });
+    </script>
 
 
 

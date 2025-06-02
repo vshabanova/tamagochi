@@ -5,6 +5,7 @@ require_once 'config.php';
 class HoroskopuGeneretajs {
     private $zodiakaRaksturiezimes;
     private $houses;
+    private $pedejaNoskana;
 
     private function tulkotZodiaku($en) {
         $translations = [
@@ -55,12 +56,16 @@ class HoroskopuGeneretajs {
 
     private function izveletiesNoskanu() {
         $noskanasVarianti = [
-        'negatīva', 'negatīva', 'negatīva',
-        'neitrāla', 'neitrāla', 'neitrāla',                         
-        'pozitīva', 'pozitīva', 'pozitīva'                                      
-    ];
-    return $noskanasVarianti[array_rand($noskanasVarianti)];
-}
+            'negatīva', 'negatīva', 'negatīva',
+            'neitrāla', 'neitrāla', 'neitrāla',                         
+            'pozitīva', 'pozitīva', 'pozitīva'                                      
+        ];
+        $this->pedejaNoskana = $noskanasVarianti[array_rand($noskanasVarianti)];
+        return $this->pedejaNoskana;
+    }
+    public function iegutPedejoNoskanu() {
+        return $this->pedejaNoskana;
+    }
 
 
     private function generetPamatekstu($datums, $pozicijas, $zime) {

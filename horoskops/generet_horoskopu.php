@@ -98,27 +98,68 @@ try {
     if (!$atrastaZime) {
         throw new Exception('Zvaigznājs nav atrasts datubāzē', 404);
     }
-
+    
     $generators = new HoroskopuGeneretajs();
     $horoskops = $generators->generetDienasHoroskopu($atrastaZime['Nosaukums'], date('Y-m-d'));
+    $noskana = $generators->iegutPedejoNoskanu();
     
     if (empty($horoskops)) {
         throw new Exception('Neizdevās ģenerēt horoskopu', 500);
     }
 
-    $stmt = $db->prepare("INSERT INTO horoskopi (Lietotajs_ID, Zvaigznajs, Datums, Teksts, Izveidots) VALUES (?, ?, ?, ?, NOW())");
+    $stmt = $db->prepare("INSERT INTO horoskopi (Lietotajs_ID, Zvaigznajs, Datums, Teksts, Reakcija, Izveidots) VALUES (?, ?, ?, ?, ?, NOW())");
     if (!$stmt) {
         throw new Exception('Datubāzes pieprasījuma kļūda', 500);
     }
 
-    $stmt->bind_param("iiss", $_SESSION['Lietotajs_ID'], $atrastaZime['Zvaigznajs_ID'], $atbilde['data']['datums'], $horoskops);
+$stmt->bind_param("iisss", $_SESSION['Lietotajs_ID'], $atrastaZime['Zvaigznajs_ID'], $atbilde['data']['datums'], $horoskops, $noskana);
     if (!$stmt->execute()) {
         throw new Exception('Neizdevās saglabāt horoskopu', 500);
     }
 
+    $bonuss = 0;
+    if ($noskana === 'pozitīva') {
+        $bonuss = 15;
+    } elseif ($noskana === 'negatīva') {
+        $bonuss = -15;
+    }
+
+    $vaicajums = $db->prepare("SELECT Labsajutas_limenis FROM dzivnieki WHERE ID_Lietotajs = ?");
+    if (!$vaicajums) {
+        throw new Exception('Datubāzes pieprasījuma kļūda', 500);
+    }
+    $vaicajums->bind_param("i", $_SESSION['Lietotajs_ID']);
+    if (!$vaicajums->execute()) {
+        throw new Exception('Neizdevās ielādēt labsajūtas līmeni', 500);
+    }
+    $rezultats = $vaicajums->get_result();
+    $pashreizejaisLimenis = $rezultats->fetch_assoc()['Labsajutas_limenis'] ?? 50;
+
+    $jaunaisLimenis = $pashreizejaisLimenis + $bonuss;
+    if ($jaunaisLimenis > 100) {
+        $bonuss = 100 - $pashreizejaisLimenis;
+        $jaunaisLimenis = 100;
+    } elseif ($jaunaisLimenis < 0) {
+        $bonuss = -$pashreizejaisLimenis;
+        $jaunaisLimenis = 0;
+    }
+
+    if ($bonuss != 0) {
+        $vaicajums = $db->prepare("UPDATE dzivnieki SET Labsajutas_limenis = ? WHERE ID_Lietotajs = ?");
+        if (!$vaicajums) {
+            throw new Exception('Datubāzes pieprasījuma kļūda', 500);
+        }
+        $vaicajums->bind_param("ii", $jaunaisLimenis, $_SESSION['Lietotajs_ID']);
+        if (!$vaicajums->execute()) {
+            throw new Exception('Neizdevās atjaunināt labsajūtas līmeni', 500);
+        }
+    }
+
+    $atbilde['data']['bonuss'] = $bonuss;
     $atbilde['success'] = true;
     $atbilde['data']['teksts'] = $horoskops;
     $atbilde['data']['zvaigznajs'] = $atrastaZime['Nosaukums'];
+    $atbilde['data']['reakcija'] = $noskana; 
 
 } catch (Exception $e) {
     $atbilde['error'] = [
