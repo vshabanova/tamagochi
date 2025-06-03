@@ -32,6 +32,8 @@ if (isset($_POST['Lietotajvards'], $_POST['Parole'], $_POST['autorizeties'])) {
     if ($lietotajs && password_verify($parole, $lietotajs['Parole'])) {
         $_SESSION['Lietotajs_ID'] = $lietotajs['Lietotajs_ID'];
         $_SESSION['Lietotajvards'] = $lietotajs['Lietotajvards'];
+        $_SESSION['autorizejies'] = true;
+        
         header('Location: home.php');
         exit();
     } else {
@@ -76,6 +78,7 @@ echo '
             </div>
 			    <input type="submit" class="dropbtnreg" name="autorizeties" value="Autorizēties">
 		</form>
+        <a href="aizmirstaparole.php">Aizmirsat paroli?</a>
         <div class="line"></div>
         </div>
 	</div>

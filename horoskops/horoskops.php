@@ -266,7 +266,6 @@ function paradiIeladi(paradit) {
 document.addEventListener('DOMContentLoaded', function() {
         ieladetHoroskopu();
         
-        // Check if already generated today
         const alreadyGenerated = <?= $alreadyGenerated ? 'true' : 'false' ?>;
         if (alreadyGenerated) {
             document.getElementById('generetBtn').disabled = true;

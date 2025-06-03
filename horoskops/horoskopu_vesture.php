@@ -8,8 +8,8 @@ $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $horoskopu_sql = "SELECT h.*, l.Lietotajs_ID FROM horoskopi h JOIN lietotaji l ON h.Lietotajs_ID = l.Lietotajs_ID WHERE l.Lietotajs_ID='$ID_Lietotajs' ORDER BY h.Datums DESC";
 $horoskopu_result = mysqli_query($savienojums, $horoskopu_sql);
 $horoskopi = [];
-while ($row = mysqli_fetch_assoc($horoskopu_result)) {
-    $horoskopi[] = $row;
+while ($rinda = mysqli_fetch_assoc($horoskopu_result)) {
+    $horoskopi[] = $rinda;
 }
 ?>
 

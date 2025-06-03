@@ -3,7 +3,7 @@ session_start();
 require("../savienojums/connect_db.php");
 
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
-$Lietotajvards = $_SESSION['autorizejies'];
+$Lietotajvards = $_SESSION['Lietotajvards'];
 
 $sql = "SELECT l.Ledusskapja_ID, l.Ediens_ID, l.Daudzums, Nosaukums, Vertiba
         FROM ledusskapis l

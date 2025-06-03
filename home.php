@@ -1,7 +1,12 @@
 <?php 
-session_start();
 require("savienojums/connect_db.php");
 require("sasniegumi/sasniegumi.php");
+
+session_start();
+if (!isset($_SESSION['Lietotajs_ID'])) {
+    header("Location: login.php");
+    exit();
+}
 
 $ID_Lietotajs = $_SESSION['Lietotajs_ID'];
 $Lietotajvards = $_SESSION['Lietotajvards'];
