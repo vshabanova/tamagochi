@@ -60,27 +60,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="lv">
 <head>
-    <title>Aizmirsta parole</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../stili/login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="shortcut icon" href="../../atteli/logo.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aizmirsta parole</title>
+    <link rel="stylesheet" type="text/css" href="public/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <form action="aizmirstaparole.php" method="post">
-        <div class="centericon">
-            <span class="fas fa-envelope"></span>
+    <div class="form-container-login">
+        <div class="flex-container">
+            <form id="login" action="aizmirstaparole.php" method="post">
+                <h2>Aizmirsta parole</h2>
+                <div class="status-message <?php echo !empty($errorEmail) ? 'error' : ''; ?>">
+                    <?php echo !empty($errorEmail) ? htmlspecialchars($errorEmail) : ''; ?>
+                </div>
+                <div class="status-message <?php echo !empty($successEmail) ? 'success' : ''; ?>">
+                    <?php echo !empty($successEmail) ? htmlspecialchars($successEmail) : ''; ?>
+                </div>
+                <div class="form-group-login">
+                    <label for="epasts"><i class="fa-solid fa-envelope"></i>E-pasts:</label>
+                    <input type="email" id="epasts" name="epasts" required>
+                </div>
+                <input type="submit" class="dropbtnreg" value="Nosūtīt saiti">
+            </form>
+            <div class="line"></div>
         </div>
-        <input type="email" name="epasts" placeholder="Ievadiet E-pastu" required>
-        <input type="submit" class="button-link" value="Nosūtīt saiti">
-        <?php if ($successEmail): ?>
-            <p><?php echo $successEmail; ?></p>
-        <?php endif; ?>
-        <?php if ($errorEmail): ?>
-            <p><?php echo $errorEmail; ?></p>
-        <?php endif; ?>
-    </form>
+    </div>
+    <a href="login.php" class="btn">Atpakaļ</a>
 </body>
 </html>

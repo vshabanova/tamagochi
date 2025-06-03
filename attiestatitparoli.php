@@ -50,32 +50,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="lv">
 <head>
-    <title>Aizmirsta parole</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../stili/login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="shortcut icon" href="../../atteli/logo.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atiestatīt paroli</title>
+    <link rel="stylesheet" type="text/css" href="public/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <h2>Atiestatīt paroli</h2>
-    <form method="post">
-        <input type="hidden" name="epasts" value="<?php echo htmlspecialchars($_GET['epasts']); ?>">
-        <input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token']); ?>">
-<div class="centericon">
-        <span class="fas fa-lock"></span>
+    <div class="form-container-login">
+        <div class="flex-container">
+            <form id="login" method="post">
+                <h2>Atiestatīt paroli</h2>
+                <?php if (isset($errorMessage)): ?>
+                    <div class="status-message error"><?php echo htmlspecialchars($errorMessage); ?></div>
+                <?php endif; ?>
+                <div class="form-group-login">
+                    <label for="Parole"><i class="fa-solid fa-key"></i>Jaunā parole:</label>
+                    <input type="password" id="Parole" name="Parole" required>
+                </div>
+                <input type="hidden" name="epasts" value="<?php echo htmlspecialchars($_GET['epasts'] ?? ''); ?>">
+                <input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token'] ?? ''); ?>">
+                <input type="submit" class="dropbtnreg" value="Iestatīt paroli">
+            </form>
+            <div class="line"></div>
         </div>
-        <input type="password" name="Parole" placeholder="Jauna parole" required>
-        <input type="submit" class="button-link" value="Iestatit paroli">
-
-        <?php if (isset($successMessage)): ?>
-            <p><?php echo $successMessage; ?></p>
-        <?php endif; ?>
-
-        <?php if (isset($errorMessage)): ?>
-            <p><?php echo $errorMessage; ?></p>
-        <?php endif; ?>
-    </form>
+    </div>
+    <a href="login.php" class="btn">Atpakaļ</a>
 </body>
 </html>

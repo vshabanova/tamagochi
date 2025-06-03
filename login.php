@@ -78,7 +78,9 @@ echo '
             </div>
 			    <input type="submit" class="dropbtnreg" name="autorizeties" value="Autorizēties">
 		</form>
-        <a href="aizmirstaparole.php">Aizmirsat paroli?</a>
+                <a href="aizmirstaparole.php" style="display: block; text-align: center; font-size: 0.9em; margin-top: 10px; color: #555; text-decoration: none;">
+            Aizmirsat paroli?
+        </a>
         <div class="line"></div>
         </div>
 	</div>

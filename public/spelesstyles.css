@@ -255,6 +255,7 @@ a.btn:active::before {
   display: inline-block;
   border: 1px solid #999;
   padding: 5px 10px;
+  margin-left: 300px;
   border-radius: 5px;
   background-color: #f9f9f9;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);

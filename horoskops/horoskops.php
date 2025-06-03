@@ -96,6 +96,34 @@ function iegutZvaigznaklu($dzimsanasDatums, $db) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="https://poetry4kids.com/wp-content/uploads/2021/09/I-Think-Id-Like-to-Get-a-Pet-icon-300x300.png">
     <script src="/tamagochi/public/muzika.js"></script>
+
+        <style>
+    .emoji-rain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+        overflow: hidden;
+    }
+    
+    .emoji {
+        position: absolute;
+        font-size: 24px;
+        animation: fall linear forwards;
+        user-select: none;
+    }
+    
+    @keyframes fall {
+        to {
+            transform: translateY(100vh);
+        }
+    }
+</style>
+
+
 </head>
 <body>
     <a href='../home.php' class='btn'>Atpakaļ</a>
@@ -172,7 +200,42 @@ function ieladetHoroskopu() {
     }
     document.getElementById('horoskopsBloks').style.display = 'none';
 }
+function createEmojiRain(emoji, count = 50, duration = 3000) {
+    const container = document.createElement('div');
+    container.className = 'emoji-rain';
+    document.body.appendChild(container);
 
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            const emojiElement = document.createElement('div');
+            emojiElement.className = 'emoji';
+            emojiElement.textContent = emoji;
+            
+            
+            emojiElement.style.left = Math.random() * 100 + 'vw';
+            
+            
+            const animDuration = Math.random() * 3000 + 2000;
+            emojiElement.style.animationDuration = animDuration + 'ms';
+            
+            
+            const size = Math.random() * 20 + 16;
+            emojiElement.style.fontSize = size + 'px';
+            
+            container.appendChild(emojiElement);
+            
+            
+            setTimeout(() => {
+                emojiElement.remove();
+            }, animDuration);
+        }, Math.random() * duration);
+    }
+
+    
+    setTimeout(() => {
+        container.remove();
+    }, duration + 3000);
+}
 function attelotHoroskopu(horoskops) {
     try {
         document.getElementById('datums').textContent = horoskops.datums;
@@ -184,6 +247,12 @@ function attelotHoroskopu(horoskops) {
             noskanaElement.className = 'noskana ' + 
                 (horoskops.reakcija === 'pozitīva' ? 'positive' : 
                  horoskops.reakcija === 'neitrāla' ? 'neutral' : 'negative');
+
+            
+            let emoji = '🙂';
+            if (horoskops.reakcija === 'pozitīva') emoji = '🥰';
+            else if (horoskops.reakcija === 'negatīva') emoji = '😡';
+            createEmojiRain(emoji);
         } else {
             noskanaElement.textContent = '';
         }
@@ -266,6 +335,7 @@ function paradiIeladi(paradit) {
 document.addEventListener('DOMContentLoaded', function() {
         ieladetHoroskopu();
         
+        
         const alreadyGenerated = <?= $alreadyGenerated ? 'true' : 'false' ?>;
         if (alreadyGenerated) {
             document.getElementById('generetBtn').disabled = true;
@@ -278,6 +348,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     </script>
-
-
-
