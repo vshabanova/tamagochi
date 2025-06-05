@@ -37,11 +37,11 @@
 ### Instalācija
 
 ```bash
-git clone https://github.com/tavs-lietotajvards/pabaro-savu-majdzivnieku.git
-cd pabaro-savu-majdzivnieku
+git clone https://github.com/vshabanova/tamagochi.git
+cd tamagochi
 ```
 
-Importē 2025_proj_dzivnieki datubāzi MySQL (izveido tabulas: lietotaji, dzivnieki, horoskopi, zvaigznaji)
+Importē 2025_proj_dzivnieki datubāzi MySQL (izveido tabulas: lietotaji, dzivnieki, horoskopi, zvaigznaji), kas ir iekš datubāze mapes.
 
 Aizpildi config.php ar saviem iestatījumiem:
 
@@ -73,23 +73,24 @@ HTML/CSS – lietotāja saskarne
 OpenAI API – horoskopa ģenerēšana
 InfinityFree – bezmaksas hostings
 
-## Vizuāls izskats
+## 📸 Vizuāls izskats
 
-- Kad tiek ģenerēts horoskops
-![Horoskopa Ģenerēšana](https://imgur.com/szPqCsS)
+### ✅ Kad tiek ģenerēts horoskops
+![Horoskopa Ģenerēšana](https://i.imgur.com/szPqCsS.png)
 
-- Kad vēsturē tas tiek saglabāts
-![Vēsture](https://imgur.com/p1dRqyT)
+### 💾 Kad vēsturē tas tiek saglabāts
+![Vēsture](https://i.imgur.com/p1dRqyT.png)
 
-Papildus funkcijas:
+### 😴 Dinamiska gulēšana
+![gulet](https://i.imgur.com/xinnclm.png)
 
-- Dinamiska gulēšana
-![gulet](https://imgur.com/xinnclm)
+### 🍽️ Personalizēti ēdieni
 
-- Personalizēti ēdieni
-  Kaķiem -
-![kakis](https://imgur.com/v1KQEXy)
-  Suņiem -
-![sunis](https://imgur.com/gxoehKB)
-  Zaķiem -
-![zakis](https://imgur.com/iMLoDhT)
+**Kaķiem**  
+![kakis](https://i.imgur.com/v1KQEXy.png)
+
+**Suņiem**  
+![sunis](https://i.imgur.com/gxoehKB.png)
+
+**Zaķiem**  
+![zakis](https://i.imgur.com/iMLoDhT.png)
